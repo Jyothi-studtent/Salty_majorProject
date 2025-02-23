@@ -1,0 +1,86 @@
+.display-issue-main-container {
+  padding: 20px;
+  background-color: #f9f9f9;
+}
+
+.display-issue-card {
+  background: white;
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.display-issue-select-fc {
+  width: 100%;
+  padding: 8px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  font-size: 16px;
+}
+
+
+
+
+.display-issue-title {
+  font-size: 24px;
+  margin-bottom: 20px;
+  font-weight: bold;
+}
+
+.display-issue-select,
+.display-issue-textarea,
+.display-issue-input {
+  width: 100%;
+  padding: 10px;
+  margin: 5px 0 15px 0; /* Added bottom margin for spacing */
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.display-issue-textarea {
+  height: 100px;
+}
+
+.display-issue-slider-container {
+  width: 100%;
+  margin-bottom: 15px; /* Added bottom margin for spacing */
+}
+
+.display-issue-slider {
+  width: 100%;
+}
+
+.display-issue-file-input {
+  margin: 10px 0 15px 0; /* Adjusted margins for consistency */
+}
+
+.display-issue-file-link {
+  display: block;
+  margin: 5px 0 15px 0; /* Adjusted margins for consistency */
+}
+
+.display-issue-button {
+  padding: 10px 20px;
+  background-color: #d0136f;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+.display-issue-button:hover {
+  background-color: #8c1259;
+}
+
+.display-issue-card p {
+  margin: 10px 0; /* Added margin for spacing between sections */
+}
+
+.display-issue-card p strong {
+  font-weight: bold;
+  display: inline-block;
+  width: 120px; /* Added width to make labels aligned */
+}
+
+

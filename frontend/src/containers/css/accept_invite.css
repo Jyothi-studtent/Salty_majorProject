@@ -1,0 +1,33 @@
+.center-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  top: 80px;
+ 
+  width: 500px;
+  height: 250px;
+  left: 380px;
+  box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.5); /* Add box shadow */
+}
+
+  .accept-button {
+    padding: 12px 12px;
+    margin-top: 40px;
+   position: relative;
+   top: 20px;
+   
+    border: none;
+    background-color:  #a8406a;
+    color: #fff;
+    cursor: pointer;
+    border-radius: 4px;
+    outline: none;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+
+}
+  .invitation-box {
+    text-align: center; /* Center align the content */
+  }
+  

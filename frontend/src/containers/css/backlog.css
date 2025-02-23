@@ -1,0 +1,374 @@
+/* General Styles */
+body {
+  font-family: Arial, sans-serif;
+  color: #333;
+  margin: 0;
+  padding: 0;
+}
+
+h1 {
+  margin: 0;
+  font-size: 24px;
+}
+
+.createClass {
+  position: relative;
+  left: 600px;
+}
+
+.firstDiv {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.toggleBacklogsList {
+  background: none;
+  color: #333;
+  margin-bottom: 20px;
+  border: none;
+  margin-right: 5px;
+  transition: background-color 0.3s ease;
+}
+
+.toggleBacklogsList:hover {
+  background-color: #edd7e0;
+}
+
+.createClass .createSprint .toggleBacklogsList {
+  background-color: #a8406a;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  padding: 5px 5px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s ease;
+}
+
+.createClass .createSprint .toggleBacklogsList:hover {
+  background-color: #a8406a;
+}
+
+.createSprint {
+  position: relative;
+  left: 800px;
+}
+
+.Displaybacklog-main {
+  position: relative;
+  left: 10px;
+}
+
+.emptySprintDiv {
+  color: #666;
+  font-size: 16px;
+  margin-top: 20px;
+}
+
+.createSprintwhenEmpty {
+  background-color: #a8406a;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  padding: 8px 10px;
+  cursor: pointer;
+  font-size: 14px;
+  margin-top: 10px;
+}
+
+.EmptyS {
+  display: flex;
+  flex-direction: row;
+}
+
+.sprint-icon {
+  position: relative;
+  top: 15px;
+  width: 30px;
+  height: 20px;
+  margin-bottom: 0;
+  margin-right: 5px;
+}
+
+.sprint-icon svg {
+  width: 100%;
+  height: 100%;
+}
+
+.sprints-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  margin-top: 20px;
+  border-radius: 2px;
+  min-height: 150px; /* Set a minimum height */
+  background-color: rgb(224, 224, 224);
+  padding: 20px;
+}
+
+.sprint-container {
+  margin-bottom: 20px;
+}
+
+/* Main Container Styles */
+.mainContainer {
+  max-width: 1000px;
+  margin: 20px auto;
+  margin-top: 5rem;
+  padding: 20px;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.create-button {
+  background-color: #a8406a;
+}
+
+.create-button:hover {
+  background-color: #a8406a;
+}
+
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-content {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  position: relative;
+}
+
+.close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.no-sprint-message {
+  text-align: center;
+  font-size: 18px;
+  color: #666;
+  margin: 20px 0;
+}
+
+.sprints {
+  margin: 20px 0;
+}
+
+.create-sprint-button {
+  display: block;
+  width: 100%;
+  background-color: #ff5722;
+  margin-top: 20px;
+}
+
+.create-btn-Backlogs {
+  background-color: #f0f0f0;
+  border: 1px solid #e4dfdf;
+  padding: 10px 10px;
+  cursor: pointer;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.create-btn-Backlogs span {
+  margin-right: 5px;
+}
+
+.create-sprint-button:hover {
+  background-color: #e64a19;
+}
+
+.backlogsList {
+  position: relative;
+  top: 20px;
+}
+
+/* Sprint Specific Styles */
+.mainBox {
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  width: 100%; /* Ensure it takes the full width of its parent */
+  box-sizing: border-box; /* Include padding and border in the element's total width and height */
+  margin-bottom: 10px;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+}
+.sprint-details{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+ 
+  padding-bottom: 5px;
+
+}
+
+.sprint-detailsopen {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #ddd;
+  padding-bottom: 5px;
+}
+
+.left-section {
+  display: flex;
+  align-items: center;
+}
+
+.react-icon {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 24px;
+  color: #666;
+}
+
+.chotadabba1 {
+  /* font-weight: bold; */
+  margin-left: 10px;
+  font-size: 1rem;
+}
+
+
+.DATE {
+  display: flex;
+  position:absolute;
+  font-size: 12px;
+  left:30rem;
+ 
+}
+
+.chotadabba, .chotadabba2 {
+  margin-right: 10px;
+  color: #666;
+}
+
+.pencilIcon {
+  display: flex;
+  align-items: center;
+  font-size: 1rem;
+  cursor: pointer;
+  /* color: #007bff; */
+}
+.pen-icon{
+  width:10px;
+  height:10px;
+}
+
+.addDates {
+  margin-left: 10px;
+  font-size: 12px;
+}
+
+.right-section {
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+
+.button-sprint {
+  background-color: #a8406a;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  padding: 5px 10px;
+  cursor: pointer;
+  margin-right: 10px;
+  transition: background-color 0.3s ease;
+}
+
+.button-sprint:hover {
+  background-color: #a8406a;
+}
+
+.dropdownC {
+  position: relative;
+}
+
+.Dropdown {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 24px;
+  color: #666;
+}
+
+.Dropdown-Content {
+  position: absolute;
+  right: 0;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  width: 100px;
+  text-align: left;
+}
+
+.Dropdown-Content span {
+  display: block;
+  padding: 10px;
+  cursor: pointer;
+  color: #333;
+  transition: background-color 0.3s ease;
+}
+
+.Dropdown-Content span:hover {
+  background-color: #f0f0f0;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .mainContainer {
+      padding: 15px;
+  }
+
+  .header {
+      flex-direction: column;
+      align-items: flex-start;
+  }
+
+  .create-button {
+      margin-top: 10px;
+      width: 100%;
+  }
+}
+
+/* Styles specific to the mainContainer to prevent conflicts */
+.mainContainer .header {
+  margin-bottom: 30px;
+}
+
+.mainContainer .modal-content {
+  width: 80%;
+  max-width: 500px;
+}
+
+.mainContainer .create-sprint-button {
+  margin-top: 30px;
+}
+
+

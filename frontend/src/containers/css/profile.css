@@ -1,0 +1,47 @@
+.profile-container {
+  width: 800px;
+  height: 350px;
+  margin: 0 auto; /* Center the container horizontally */
+  margin-top: 20vh; /* Center vertically */
+  background-color: aliceblue;
+  padding: 20px; /* Add padding for space around the container */
+  border: 2px solid #ccc; /* Add a border */
+  border-radius: 10px; /* Add border radius for rounded corners */
+  display: flex; /* Use flexbox for layout */
+  align-items: flex-start; /* Align items to the top */
+}
+
+label {
+  margin-right: 2rem;
+  width: 150px; /* Fixed width for alignment */
+}
+
+.right-side-profile {
+  flex: 1; /* Take remaining space */
+  margin-left: 4rem;
+}
+
+.profile-field {
+  padding-top: 2rem;
+  display: flex; /* Flexbox for alignment */
+  align-items: center; /* Center vertically */
+}
+
+.profile-field input[type="text"] {
+  flex: 1; /* Take remaining space */
+}
+
+.left-side-profile {
+  margin-top: 2rem;
+  flex-shrink: 0; /* Do not allow shrinking */
+  width: 15rem; /* Fixed width for the left side */
+  height: 15rem; /* Fixed height for the left side */
+  display: flex; /* Use flexbox for inner layout */
+  justify-self: center;
+  justify-content: center; /* Center content horizontally */
+  align-items: center; /* Center content vertically */
+  border-radius: 50%; /* Create a circle */
+  font-size: 8rem; /* Adjust font size */
+  color: white; /* Text color */
+  margin-right: 20px; /* Margin to separate from right side */
+}

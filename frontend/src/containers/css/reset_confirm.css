@@ -1,0 +1,49 @@
+.reset-password-confirm-container {
+    width: 400px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    position: relative;
+    top: 100px;
+  }
+  
+  .reset-password-confirm-title {
+    font-size: 24px;
+    margin-bottom: 20px;
+  }
+  
+  .reset-password-confirm-form-group {
+    margin-bottom: 20px;
+  }
+  
+  .reset-password-confirm-input {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+  }
+  .reset_head{
+    position: relative;
+    bottom: 10px;
+    left: 100px;
+  }
+  .reset-password-confirm-btn-primary {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    color: #fff;
+    background-color:  #a8406a;
+
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  .reset-password-confirm-btn-primary:hover {
+    background-color:  #c74f7f;
+
+  }
+  

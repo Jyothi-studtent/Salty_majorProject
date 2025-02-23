@@ -1,0 +1,138 @@
+/* Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Open+Sans:wght@400;500&display=swap');
+/* Color Palette */
+.first-color {
+    background: #fafafa;
+}
+.second-color {
+    background: #cd176f;
+}
+.third-color {
+    background: #9c1647;
+}
+.fourth-color {
+    background: #e2719d;
+}
+
+/* Additional Styles */
+.signup-page {
+    background-color: #fafafa; /* Set background color using the first color */
+}
+
+.signup-container,
+.login-container {
+    background-color: white; /* Set background color using the first color */
+    /* Additional styles */
+}
+
+
+/* Signup Page Styles */
+.signup-page {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #fafafa;
+}
+
+.signup-container {
+    background-color: white;
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+    margin-top: 6rem;
+    height: 80vh;
+}
+
+.signup-heading {
+    font-family:  'Montserrat', sans-serif;
+    font-weight: 700;
+    color: #333;
+    margin-bottom: 1rem;
+}
+
+.signup-subheading {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 400;
+    color: #666;
+    margin-bottom: 2rem;
+}
+
+.signup-form-group {
+    margin-bottom: 0.8rem;
+    text-align: left;
+}
+
+.signup-form-control {
+    width: 100%;
+    padding: 0.5rem;
+    font-family: 'Work Sans', sans-serif;
+    font-weight: 500;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    margin-top: 0.5rem;
+}
+
+.signup-btn {
+    display: inline-block;
+    padding: 0.75rem 1.5rem;
+    font-family: 'Work Sans', sans-serif;
+    font-weight: 500;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    text-align: center;
+    transition: background-color 0.3s ease;
+    width: 100%;
+}
+
+.signup-btn-primary {
+    background-color: #cd176f;
+    color: white;
+}
+
+.signup-btn-primary:hover {
+    background-color: #c9356c;
+}
+
+.signup-btn-google {
+    background-color: #326ac3;
+    color: white;
+}
+
+.signup-btn-google:hover {
+    background-color: #357ae8;
+}
+
+.signup-text {
+    font-family: 'Work Sans', sans-serif;
+    font-weight: 500;
+    color: #333;
+    font-size: 14px;
+    margin-top: 9px;
+}
+
+.signup-link {
+    color: #bd055e;
+    text-decoration: none;
+}
+
+.signup-link:hover {
+    text-decoration: underline;
+}
+
+#signup-mess{
+    position: fixed;
+    top: 12%;
+    left: 38%;
+    color: #ff347f;
+    background-color: #fff;
+    padding: 7px 28px;
+    width: 300px;
+    border: 1px solid #ff347f;
+    border-radius: 4px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }

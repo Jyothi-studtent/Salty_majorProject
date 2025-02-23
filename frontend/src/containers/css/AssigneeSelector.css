@@ -1,0 +1,45 @@
+.assignee-container2 {
+    position: relative;
+  }
+  
+  .assignee {
+    cursor: pointer;
+  }
+  
+  .assignee-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px; /* Adjust size as needed */
+    height: 30px; /* Adjust size as needed */
+    border-radius: 50%;
+    background-color: #ccc;
+    color: #fff;
+    font-size: 14px; /* Adjust font size as needed */
+  }
+  
+  .assignee-icon svg {
+    width: 20px; /* Adjust size as needed */
+    height: 20px; /* Adjust size as needed */
+  }
+  
+  .usericon-dropdown {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    padding: 5px;
+    z-index: 10;
+    display: none;
+  }
+  
+  .usericon-dropdown-item {
+    cursor: pointer;
+    padding: 5px;
+  }
+  
+  .usericon-dropdown-item:hover {
+    background-color: #f0f0f0;
+  }
+  

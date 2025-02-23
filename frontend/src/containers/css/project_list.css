@@ -1,0 +1,36 @@
+/* Project List Styles */
+.projectListContainer {
+  margin-top: 4rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Display items vertically */
+   /* Center horizontally */
+}
+
+.projectListContainer h2
+{
+  align-items: left;
+}
+
+.projectListTable {
+  width: 80vw;
+  border-collapse: collapse;
+}
+
+.projectListTable th, .projectListTable td {
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 2px;
+}
+
+.projectListTable th {
+  background-color: #f0f0f0;
+  font-weight: bold;
+  text-align: left;
+}
+
+.projectListTable tbody tr:hover {
+  background-color: #f9f9f9;
+  cursor: pointer;
+}
+

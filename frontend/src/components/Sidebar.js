@@ -7,19 +7,16 @@ import { HiViewBoards } from "react-icons/hi";
 import { IoList } from "react-icons/io5";
 import { GoIssueClosed } from "react-icons/go";
 import { BiSolidPieChartAlt2 } from "react-icons/bi";
-import { RxHamburgerMenu } from "react-icons/rx";
-import { MdClose } from "react-icons/md";
-import { useSelector } from 'react-redux';
 
 const Sidebar = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const { projectid } = useParams();
+  const { group_id, projectid } = useParams(); // Extract group_id and projectid from URL
   const navigate = useNavigate();
 
   const navigateTo = (path) => {
-    navigate(path);
+    navigate(`/group/${group_id}/project/${projectid}${path}`);
   };
-  // const projectName=useSelector(state => state.auth.project.projectname);
+
   return (
     <section
       className="page sidebar-3-page"
@@ -29,38 +26,36 @@ const Sidebar = () => {
       <aside className={`sidebar-3 ${isOpen ? 'open' : ''}`}>
         <div className="inner">
           <header>
-          <div className="project-id">
-            {(isOpen)?<p>{projectid}</p>:<></>}
-           
-          </div>
+            <div className="project-id">
+              {isOpen ? <p>{projectid}</p> : <></>}
+            </div>
           </header>
           <nav>
-            <button type="button" onClick={() => navigateTo(`/project/${projectid}/time`)}>
+            <button type="button" onClick={() => navigateTo("/time")}>
               <FaTimeline />
               {isOpen && <p>Timeline</p>}
             </button>
-            <button type="button" onClick={() => navigateTo(`/project/${projectid}/backlog`)}>
+            <button type="button" onClick={() => navigateTo("/backlog")}>
               <BsStack />
               {isOpen && <p>Backlogs</p>}
             </button>
-            <button type="button" onClick={() => navigateTo(`/project/${projectid}/boards`)}>
+            <button type="button" onClick={() => navigateTo("/boards")}>
               <HiViewBoards />
               {isOpen && <p>Boards</p>}
             </button>
-            <button type="button" onClick={() => navigateTo(`/project/${projectid}/filters`)}>
+            <button type="button" onClick={() => navigateTo("/filters")}>
               <IoList />
               {isOpen && <p>Filters</p>}
             </button>
-            <button type="button" onClick={() => navigateTo(`/project/${projectid}/myissues`)}>
+            <button type="button" onClick={() => navigateTo("/myissues")}>
               <GoIssueClosed />
               {isOpen && <p>My Issues</p>}
             </button>
-            <button type="button" onClick={() => navigateTo(`/project/${projectid}/contributions`)}>
+            <button type="button" onClick={() => navigateTo("/contributions")}>
               <BiSolidPieChartAlt2 />
               {isOpen && <p>Reports</p>}
             </button>
           </nav>
-         
         </div>
       </aside>
     </section>
@@ -68,7 +63,3 @@ const Sidebar = () => {
 };
 
 export default Sidebar;
-
-
-
-

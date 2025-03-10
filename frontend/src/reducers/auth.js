@@ -21,7 +21,11 @@ import {
     ISSUE_ADDED_Fail,
     ISSUE_ADDED_SUCCESS,
     PROJECT_CLICK_SUCCESS,
-    PROJECT_CLICK_FAIL
+    PROJECT_CLICK_FAIL,
+    GROUP_CREATE_SUCCESS,
+    GROUP_CREATE_FAIL,
+    GROUP_CLICK_SUCCESS,
+    GROUP_CLICK_FAIL,
    
 } from '../actions/types';
 
@@ -122,8 +126,11 @@ export default function(state = initialState, action) {
                     return {
                         ...state
                     }
+
             case  PROJECT_CREATE_SUCCESS:
             case  PROJECT_CLICK_SUCCESS:
+            case GROUP_CREATE_SUCCESS:
+            case GROUP_CLICK_SUCCESS:
             return {
                 ...state,
                 project: action.payload,
@@ -131,17 +138,15 @@ export default function(state = initialState, action) {
             };
         case  PROJECT_CREATE_FAIL:
         case  PROJECT_CLICK_FAIL:
+        case GROUP_CREATE_FAIL:
+        case GROUP_CLICK_FAIL:
+        case  ISSUE_ADDED_Fail:
 
             return {
                 ...state,
                 error: action.payload
             };
-        case  ISSUE_ADDED_Fail:
-                return {
-                    ...state,
-                    error: action.payload
-                };
-
+       
         default:
             return state
     }

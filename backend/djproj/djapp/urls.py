@@ -2,12 +2,21 @@ from django.urls import path
 from .views import *
 
 urlpatterns = [
+    path('create_group/', create_group, name='create_group'),
    path('create/', create_project, name='create_project'),
     path('add/', add_issue, name='add_issue'),
     path('generate_invitation_token/',  generate_invitation_token, name='generate_invitation_token'),
     path('verify_invitation_token/',verify_invitation_token, name='verify_invitation_token'),
     path('process_invitation_token/',process_invitation_token, name='process_invitation_token'),
+    path('invite_group_members/',invite_group_members, name='invite_group_members'),
+    # path('view_invitation/',view_invitation, name='view_invitation'),
+    # path('accept_invitation/',accept_invitation, name='accept_invitation'),
+    # path('decline_invitation/',decline_invitation, name='decline_invitation'),
+
+
+   
     path('project_list/',project_list, name='project_list'),
+    path('group_list/',group_list, name='group_list'),
     path('issues/', ReactViews, name='project-issues'),
     path('create_issue/', create_issue, name='create_issue'),
     path('create_epic/', create_epic, name= 'create_epic'),

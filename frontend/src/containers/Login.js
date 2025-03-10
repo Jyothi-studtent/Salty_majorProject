@@ -71,7 +71,7 @@ const Login = ({ login, isAuthenticated }) => {
     }, [message]);
 
     if (isAuthenticated) {
-        return <Navigate to='/project' />;
+        return <Navigate to='/group' />;
     }
 
     return (

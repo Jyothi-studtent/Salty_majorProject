@@ -74,13 +74,44 @@ class UserAccount(AbstractBaseUser, PermissionsMixin):
             self.first_letter = placeholder["initial"]
         super(UserAccount, self).save(*args, **kwargs)
 
+from django.db import models
+
+class Group(models.Model):
+    group_id = models.CharField(primary_key=True, max_length=20)
+    group_name = models.CharField(max_length=100, unique=True)
+    group_head = models.EmailField(null=True)  
+    
+
+    def __str__(self):
+        return self.group_name
+
+class GroupMember(models.Model):
+    group = models.ForeignKey(Group, on_delete=models.CASCADE, related_name='members')
+    member_email = models.EmailField(null=True)
+    
+
+    def __str__(self):
+        return f"{self.member_email} - {self.group.group_name}"
+    
+class GroupInvitation(models.Model):
+    group = models.ForeignKey(Group, on_delete=models.CASCADE, related_name="invitations")
+    invitee_email = models.EmailField()
+    token = models.CharField(max_length=100, unique=True)
+    is_accepted = models.BooleanField(default=False)
+
+    def __str__(self):
+        return f"Invitation to {self.invitee_email} for {self.group.group_name}"
+
+
+
 class Project(models.Model):
+        group = models.ForeignKey(Group, on_delete=models.CASCADE, related_name="projects",null=True, blank=True)
         projectname = models.CharField(max_length=100)
         projectid = models.CharField(primary_key=True, max_length=20)
         teamlead_email = models.EmailField( null=True)
 
         def __str__(self):
-            return f"{self.projectid} - {self.projectname}"
+            return f"{self.group} - {self.projectid} - {self.projectname}"
 
 class Project_TeamMember(models.Model):
         project = models.ForeignKey(Project, on_delete=models.CASCADE)

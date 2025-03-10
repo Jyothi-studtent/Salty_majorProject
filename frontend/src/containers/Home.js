@@ -32,7 +32,7 @@ const Home = ({ isAuthenticated }) => {
             </div>
           </div>
         ) : (
-          <Navigate to={`/project`} />
+          <Navigate to={`/group`} />
         )}
       </section>
       <section className='card-container'>

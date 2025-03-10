@@ -8,6 +8,9 @@ import ProjectPage from './containers/ProjectPage';
 import DisplayBacklog from './containers/DisplayBacklog';
 import Filters from './containers/Filters';
 import Signup from './containers/Signup';
+import Group from './containers/Group';
+import View_invitation from './containers/View_invitation';
+
 import Board from './containers/board';
 import Activate from './containers/Activate';
 import Resetpassword from './containers/Resetpassword';
@@ -42,18 +45,22 @@ const App = () => {
             <Route path="/signup" element={<Signup/>} />
             <Route path="/activate/:uid/:token" element={<Activate/>} />
             <Route path="/reset_password" element={<Resetpassword/>} />
+            <Route path="/view_invitation" element={<View_invitation />} />
             <Route path="/password/reset/confirm/:uid/:token" element={<Resetpasswordconfirm/>} />
-            <Route path="/project" element={<Project />} />
-            <Route path="/project/:projectid" element={<ProjectPage />} />
-            <Route path="/project/:projectid/boards" element={<Board />} />
+            <Route path="/group" element={<Group/>} />
+
+            <Route path="/group/:group_id/project" element={<Project />} /> 
+          
+            {/* <Route path="/project/:projectid" element={<ProjectPage />} /> */}
+            <Route path="/group/:group_id/project/:projectid/boards" element={<Board />} />
             <Route path="/accept-invitation" element={<Accept_invitation />} />
-            <Route path="/project/:projectid/backlog" element={<DisplayBacklog/>} />
-            <Route path="/project/:projectid/filters" element={<Filters/>} />
-            <Route path="/project/:projectid/myissues" element={<MyIssues />} />
-            <Route path="/project/:projectid/profile" element={<Profile />} />
-            <Route path="/project/:projectid/contributions" element={<Contributions />} />
-            <Route path="/project/:projectid/time" element={<Time />} />
-            <Route path="/project/:projectid/times" element={<Timemaxi />} />
+            <Route path="/group/:group_id/project/:projectid/backlog" element={<DisplayBacklog/>} />
+            <Route path="/group/:group_id/project/:projectid/filters" element={<Filters/>} />
+            <Route path="/group/:group_id/project/:projectid/myissues" element={<MyIssues />} />
+            <Route path="/group/:group_id/project/:projectid/profile" element={<Profile />} />
+            <Route path="/group/:group_id/project/:projectid/contributions" element={<Contributions />} />
+            <Route path="/group/:group_id/project/:projectid/time" element={<Time />} />
+            <Route path="/group/:group_id/project/:projectid/times" element={<Timemaxi />} />
             <Route path="/fileupload" element={<FileUpload />} />
             </Routes>
             </Layout>

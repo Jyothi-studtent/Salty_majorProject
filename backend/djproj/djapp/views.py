@@ -1,7 +1,9 @@
 from sqlite3 import IntegrityError
-from django.shortcuts import render
+from django.shortcuts import render,redirect, get_object_or_404
 from django.http import HttpResponseBadRequest, JsonResponse
 from django.views.decorators.csrf import csrf_exempt
+
+
 from .models import *
 from rest_framework import status
 from rest_framework.response import Response
@@ -21,6 +23,7 @@ from social_django.models import UserSocialAuth
 from django.core.exceptions import ObjectDoesNotExist
 import random
 from rest_framework.parsers import MultiPartParser, FormParser
+from django.utils.crypto import get_random_string
 
 @csrf_exempt 
 def ReactViews(request):
@@ -69,31 +72,174 @@ def add_issue(request):
     else:
         return JsonResponse({'success': False, 'message': 'Invalid request method'})
 
+
+
+@csrf_exempt
+def create_group(request):
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            group_name = data.get('groupname')
+            group_id = data.get('groupid')
+            group_head = data.get('grouphead')
+
+            if not group_name or not group_head:
+                return JsonResponse({'error': 'Group name and group head are required'}, status=400)
+
+            if Group.objects.filter(group_id=group_id).exists():
+                return JsonResponse({'error': 'Group ID already exists'}, status=400)
+
+            group = Group(group_id=group_id, group_name=group_name, group_head=group_head)
+            group.save()
+            GroupMember.objects.create(group=group, member_email=group_head)  # Add the creator as a member
+
+            response_data = {
+                'message': 'Group created successfully',
+                'groupid': group.group_id,
+                'groupname': group.group_name,
+                'grouphead': group.group_head
+            }
+
+            return JsonResponse(response_data, status=201)
+        except json.JSONDecodeError:
+            return JsonResponse({'error': 'Invalid JSON data'}, status=400)
+    else:
+        return JsonResponse({'error': 'Only POST requests are allowed'}, status=405)
+
+@csrf_exempt
+def group_list(request):
+    if request.method == 'GET':
+        email = request.GET.get('email', None)
+        if not email:
+            return JsonResponse({'error': 'Email parameter is missing'}, status=400)
+        
+        try:
+            user = UserAccount.objects.get(email=email)
+        except UserAccount.DoesNotExist:
+            return JsonResponse({'error': 'User does not exist'}, status=404)
+        
+        if user.is_admin:
+            groups = Group.objects.all()
+        else:
+            # Retrieve groups where the email matches the group head
+            groups_head = Group.objects.filter(group_head=email)
+            # Retrieve groups where the email matches a group member
+            groups_member = GroupMember.objects.filter(member_email=email).values('group')
+            # Combine both lists of groups
+            groups = list(groups_head) + list(Group.objects.filter(pk__in=groups_member))
+        
+        # Create a list of group data including group head information
+        group_data = [
+            {
+                'group_id': group.group_id,
+                'group_name': group.group_name,
+                'group_head': group.group_head
+            } 
+            for group in groups
+        ]
+        return JsonResponse(group_data, safe=False)
+    else:
+        return JsonResponse({'error': 'Only GET requests are allowed'}, status=405)
+
+
+@csrf_exempt
+def invite_group_members(request):
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            group_id = data.get('group_id')
+            emails = data.get('emails')
+
+            group = get_object_or_404(Group, group_id=group_id)
+
+            for email in emails:
+                # Generate unique invitation token
+                token = get_random_string(32)
+                GroupInvitation.objects.create(group=group, invitee_email=email, token=token)
+
+                # Send invitation email
+                invite_link = f"http:/localhost:3000/view_invitation?token={token}"
+                subject = f"Join {group.group_name} created by {group.group_head}"
+                message = f"""
+                You have been invited to join the group "{group.group_name}" created by {group.group_head}.
+                Click below to view the invitation:
+                {invite_link}
+                """
+                send_mail(subject, message, EMAIL_HOST_USER, [email])
+
+            return JsonResponse({'message': 'Invitations sent successfully!'}, status=200)
+
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=500)
+
+    return JsonResponse({'error': 'Only POST requests allowed'}, status=405)
+
+def view_invitation(request):
+    token = request.GET.get('token')
+    invitation = get_object_or_404(GroupInvitation, token=token)
+
+    return render(request, 'view_invitation.html', {'invitation': invitation})
+
+def accept_invitation(request):
+    token = request.GET.get('token')
+    invitation = get_object_or_404(GroupInvitation, token=token)
+
+    if request.user.is_authenticated:
+        GroupMember.objects.create(group=invitation.group, member_email=request.user.email)
+        invitation.is_accepted = True
+        invitation.save()
+        return redirect('/group')
+    else:
+        return redirect('/login')
+
+def decline_invitation(request):
+    token = request.GET.get('token')
+    invitation = get_object_or_404(GroupInvitation, token=token)
+    invitation.delete()
+    return redirect('/')
+
+
 @csrf_exempt
 def create_project(request):
-    print("before")
     if request.method == 'POST':
-        print(request)
-        # Parse request body as JSON
-        data = json.loads(request.body)
-        project_name = data.get('projectname')
-        teamlead = data.get('teamlead')
-        projectid = data.get('projectid')
-        if project_name:
-            project = Project(projectid=projectid,projectname=project_name, teamlead_email=teamlead)
-       
+        try:
+            data = json.loads(request.body)
+            project_name = data.get('projectname')
+            teamlead = data.get('teamlead')
+            projectid = data.get('projectid')
+            group_id = data.get('group_id')  # Get group ID from request
+
+            if not project_name or not projectid or not teamlead:
+                return JsonResponse({'error': 'Missing required fields'}, status=400)
+
+            # Ensure group_id is valid
+            group = None
+            if group_id:
+                try:
+                    group = Group.objects.get(group_id=group_id)
+                except Group.DoesNotExist:
+                    return JsonResponse({'error': 'Invalid group ID'}, status=400)
+
+            # Create project and assign to group
+            project = Project(
+                projectid=projectid,
+                projectname=project_name,
+                teamlead_email=teamlead,
+                group=group  # Assign project to group
+            )
             project.save()
-            # Create a dictionary with all parameters
+
             response_data = {
                 'message': 'Project created successfully',
                 'projectid': project.projectid,
                 'projectname': project.projectname,
                 'teamlead_email': project.teamlead_email,
+                'group_id': group_id
             }
-           
+
             return JsonResponse(response_data, status=201)
-        else:
-            return JsonResponse({'error': 'Project name is required'}, status=400)
+        except json.JSONDecodeError:
+            return JsonResponse({'error': 'Invalid JSON data'}, status=400)
     else:
         return JsonResponse({'error': 'Only POST requests are allowed'}, status=405)
 
@@ -178,33 +324,48 @@ def process_invitation_token(request):
 def project_list(request):
     if request.method == 'GET':
         email = request.GET.get('email', None)
+        group_id = request.GET.get('group_id', None)  # Get group_id from request
+
         if not email:
             return JsonResponse({'error': 'Email parameter is missing'}, status=400)
+        if not group_id:
+            return JsonResponse({'error': 'Group ID parameter is missing'}, status=400)
+
         try:
             user = UserAccount.objects.get(email=email)
         except UserAccount.DoesNotExist:
             return JsonResponse({'error': 'User does not exist'}, status=404)
-        if user.is_admin:
-            projects = Project.objects.all()
-        else:
-            # Retrieve projects where the email matches the team lead
-            projects_lead = Project.objects.filter(teamlead_email=email)
-            # Retrieve projects where the email matches a team member
-            projects_member = Project_TeamMember.objects.filter(team_member_email=email).values('project')  # Retrieve project IDs
-            # Combine both lists of projects
-            projects = list(projects_lead) + list(Project.objects.filter(pk__in=projects_member))
-        # Create a list of project data including team lead information
+
+        # Retrieve projects in the given group
+        projects_in_group = Project.objects.filter(group__group_id=group_id)
+
+        # Filter projects where the user is a **team lead**
+        projects_lead = projects_in_group.filter(teamlead_email=email)
+
+        # Filter projects where the user is a **team member**
+        projects_member = Project_TeamMember.objects.filter(
+            team_member_email=email, 
+            project__group__group_id=group_id
+        ).values('project')
+
+        # Combine both lists of projects
+        projects = list(projects_lead) + list(Project.objects.filter(pk__in=projects_member))
+
+        # Format response data
         project_data = [
             {
                 'projectid': project.projectid,
                 'projectname': project.projectname,
-                'teamlead_email': project.teamlead_email
+                'teamlead_email': project.teamlead_email,
+                'group_id': project.group.group_id if project.group else None
             } 
             for project in projects
         ]
+
         return JsonResponse(project_data, safe=False)
     else:
         return JsonResponse({'error': 'Only GET requests are allowed'}, status=405)
+
 
 @csrf_exempt
 def get_team_members(request):

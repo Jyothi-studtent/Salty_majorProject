@@ -1,19 +1,22 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { connect } from 'react-redux';
-import { useNavigate } from 'react-router-dom'; // Import useNavigate hook
+import { useNavigate, useParams } from 'react-router-dom';
 import { clickProject } from '../actions/auth';
-import './css/project_list.css'; // Updated CSS file name
+import './css/project_list.css';
 
 const ProjectList = ({ user, clickProject }) => {
     const [projects, setProjects] = useState([]);
-    const navigate = useNavigate(); // Initialize navigate
+    const navigate = useNavigate();
+    const { group_id } = useParams(); // Extract group_id from URL path
 
     useEffect(() => {
         const fetchProjects = async () => {
+            if (!group_id) return; // Ensure group_id is present
+
             try {
                 const response = await axios.get('http://localhost:8000/djapp/project_list/', {
-                    params: { email: user.email }
+                    params: { email: user.email, group_id: group_id } // Send group_id
                 });
                 setProjects(response.data);
             } catch (error) {
@@ -22,7 +25,7 @@ const ProjectList = ({ user, clickProject }) => {
         };
 
         fetchProjects();
-    }, [user]);
+    }, [user, group_id]);
 
     const handleProjectClick = (project) => {
         clickProject({
@@ -30,31 +33,35 @@ const ProjectList = ({ user, clickProject }) => {
             projectname: project.projectname,
             teamlead_email: project.teamlead_email
         });
-        navigate(`/project/${project.projectid}/backlog`); // Navigate to the project details page
+        navigate(`/group/${group_id}/project/${project.projectid}/backlog`);
     };
 
     return (
         <>
-        <h2>Projects</h2>
-        <div className="projectListContainer"> {/* Updated CSS class name */}
-           
-            <table className="projectListTable"> {/* Updated CSS class name */}
+        <h2>Projects in Group {group_id}</h2>
+        <div className="projectListContainer">
+            <table className="projectListTable">
                 <thead>
                     <tr>
-                        <th>Project key</th>
-                        <th>Project name</th>
-                        <th>Team lead </th>
+                        <th>Project Key</th>
+                        <th>Project Name</th>
+                        <th>Team Lead</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {projects.map(project => (
-                        // Make the entire row clickable
-                        <tr key={project.projectid} onClick={() => handleProjectClick(project)}>
-                            <td>{project.projectname}</td>
-                            <td>{project.projectid}</td>
-                            <td>{project.teamlead_email}</td>
+                    {projects.length > 0 ? (
+                        projects.map(project => (
+                            <tr key={project.projectid} onClick={() => handleProjectClick(project)}>
+                                <td>{project.projectid}</td>
+                                <td>{project.projectname}</td>
+                                <td>{project.teamlead_email}</td>
+                            </tr>
+                        ))
+                    ) : (
+                        <tr>
+                            <td colSpan="3">No projects available</td>
                         </tr>
-                    ))}
+                    )}
                 </tbody>
             </table>
         </div>

@@ -23,10 +23,26 @@ import {
     ISSUE_ADDED_Fail,
     ISSUE_ADDED_SUCCESS,
     PROJECT_CLICK_SUCCESS,
-    PROJECT_CLICK_FAIL
+    PROJECT_CLICK_FAIL,
+    GROUP_CREATE_SUCCESS,
+    GROUP_CREATE_FAIL,
+    GROUP_CLICK_SUCCESS,
+    GROUP_CLICK_FAIL,
  
    
 } from './types';
+
+
+
+
+export const createGroup = (groupData) => async (dispatch) => {
+    try {
+        const response = await axios.post('http://localhost:8000/djapp/create_group/', groupData);
+        dispatch({ type: GROUP_CREATE_SUCCESS, payload: response.data });
+    } catch (error) {
+        dispatch({ type: GROUP_CREATE_FAIL, payload: error.message });
+    }
+};
 
 export const createProject = (projectData) => async (dispatch) => {
     try {
@@ -59,6 +75,13 @@ export const clickProject = (projectData) => (dispatch) => {
     }
 };
 
+export const clickGroup = (groupData) => (dispatch) => {
+    try {
+        dispatch({ type: GROUP_CLICK_SUCCESS, payload: groupData });
+    } catch (error) {
+        dispatch({ type: GROUP_CLICK_FAIL, payload: error.message });
+    }
+};
 
 export const load_user = () => async dispatch => {
     if (localStorage.getItem('access')) {

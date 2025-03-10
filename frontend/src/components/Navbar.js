@@ -13,7 +13,7 @@ const Navbar = ({ logout, isAuthenticated, user }) => {
     const [projects, setProjects] = useState([]);
     const dropdownRef = useRef(null);
     const navigate = useNavigate();
-    const { projectid } = useParams();
+    const { group_id, projectid } = useParams();
     const [formOpen, setFormOpen] = useState(false);
 
     useEffect(() => {
@@ -82,15 +82,15 @@ const Navbar = ({ logout, isAuthenticated, user }) => {
     );
 
     const openProfile = () => {
-        navigate(`/project/${projectid}/profile`);
+        navigate(`/group/${group_id}/project/${projectid}/profile`);
     };
 
     const openMyIssues = () => {
-        navigate(`/project/${projectid}/filters`);
+        navigate(`/group/${group_id}/project/${projectid}/filters`);
     };
 
     const openViewAllProjects = () => {
-        navigate('/project',{replace:true}); 
+        navigate(`/group/${group_id}/project`, { replace: true }); 
         window.location.reload();
     };
 
@@ -114,13 +114,10 @@ const Navbar = ({ logout, isAuthenticated, user }) => {
                         {isDropdownOpen && (
                             <ul className='dropdown' ref={dropdownRef}>
                                 {projects.map(project => (
-                                    <li key={project.id}>
-                                        <Link to={`/project/${project.projectid}/backlog`} className='dropdown-item'>{project.projectname}</Link>
+                                    <li key={project.projectid}>
+                                        <Link to={`/group/${project.group_id}/project/${project.projectid}/backlog`} className='dropdown-item'>{project.projectname}</Link>
                                     </li>
                                 ))}
-                                <li>
-                                    <a href='#!' onClick={openViewAllProjects} className='dropdown-item'>View All Projects</a>
-                                </li>
                             </ul>
                         )}
                     </li>

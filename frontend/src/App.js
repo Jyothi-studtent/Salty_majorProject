@@ -24,7 +24,7 @@ import Contributions from './containers/Contributions';
 import MyIssues from './containers/MyIssues';
 import Profile from './containers/Profile';
 import Time from './containers/Time';
-
+import ProtectedRoutes from "./components/ProtectedRoute"
 
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
@@ -43,12 +43,12 @@ const App = () => {
             <Route path="/" element={<Home />} />
             <Route path="/login" element={<Login/>} />
             <Route path="/signup" element={<Signup/>} />
+            <Route element={<ProtectedRoutes />}>
             <Route path="/activate/:uid/:token" element={<Activate/>} />
             <Route path="/reset_password" element={<Resetpassword/>} />
             <Route path="/view_invitation" element={<View_invitation />} />
             <Route path="/password/reset/confirm/:uid/:token" element={<Resetpasswordconfirm/>} />
             <Route path="/group" element={<Group/>} />
-
             <Route path="/group/:group_id/project" element={<Project />} /> 
           
             {/* <Route path="/project/:projectid" element={<ProjectPage />} /> */}
@@ -62,8 +62,10 @@ const App = () => {
             <Route path="/group/:group_id/project/:projectid/time" element={<Time />} />
             <Route path="/group/:group_id/project/:projectid/times" element={<Timemaxi />} />
             <Route path="/fileupload" element={<FileUpload />} />
+            </Route>
             </Routes>
             </Layout>
+
         </Router>
         </Provider>
         </DndProvider>  

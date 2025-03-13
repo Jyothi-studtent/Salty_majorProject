@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, Navigate, useLocation } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { login } from '../actions/auth';
+import { clickGroup, login } from '../actions/auth';
 import axios from 'axios';
 import './css/login.css';
 
@@ -71,6 +71,7 @@ const Login = ({ login, isAuthenticated }) => {
     }, [message]);
 
     if (isAuthenticated) {
+        console.log("are u innnnnnn",isAuthenticated)
         return <Navigate to='/group' />;
     }
 

@@ -2,8 +2,8 @@ from sqlite3 import IntegrityError
 from django.shortcuts import render,redirect, get_object_or_404
 from django.http import HttpResponseBadRequest, JsonResponse
 from django.views.decorators.csrf import csrf_exempt
-
-
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated
 from .models import *
 from rest_framework import status
 from rest_framework.response import Response
@@ -689,7 +689,8 @@ def countsprints(request):
             return JsonResponse({"error": "Project ID is required"}, status=400)
     else:
         return JsonResponse({"error": "Only GET requests are allowed"}, status=405)
-
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
 @csrf_exempt
 def issuesOfSprint(request):
     if request.method == 'GET':
@@ -811,7 +812,8 @@ def update_issueSprint(request):
             return JsonResponse({"message": "Invalid JSON format in request body"}, status=400)
     else:
         return JsonResponse({"message": "Only POST requests are allowed"}, status=405)
-    
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])  
 @csrf_exempt
 def update_issue_name(request):
     if request.method == 'POST':
@@ -1089,6 +1091,8 @@ def update_storypoints(request):
             return JsonResponse({"message": "Invalid JSON format in request body"}, status=400)
     else:
         return JsonResponse({"message": "Only POST requests are allowed"}, status=405)
+
+
   
 
 

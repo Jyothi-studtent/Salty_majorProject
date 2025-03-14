@@ -59,7 +59,8 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
      'django.middleware.security.SecurityMiddleware',
-    'corsheaders.middleware.CorsMiddleware'
+    'corsheaders.middleware.CorsMiddleware',
+    'djproj.middleware.debug_middleware'
 ]
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
@@ -178,6 +179,17 @@ SIMPLE_JWT = {
     )
    
 }
+from datetime import timedelta
+
+# SIMPLE_JWT = {
+#     "ACCESS_TOKEN_LIFETIME": timedelta(minutes=60),  # Access token valid for 1 hour
+#     "REFRESH_TOKEN_LIFETIME": timedelta(days=1),  # Refresh token valid for 1 day
+#     "ROTATE_REFRESH_TOKENS": True,  # Enables refresh token rotation
+#     "BLACKLIST_AFTER_ROTATION": True,  # Blacklist old refresh tokens
+#     "AUTH_HEADER_TYPES": ("Bearer",),  # Allows "Bearer <token>" in Authorization header
+#     "AUTH_TOKEN_CLASSES": ("rest_framework_simplejwt.tokens.AccessToken",),
+# }
+
 
 DJOSER = {
     'LOGIN_FIELD': 'email',

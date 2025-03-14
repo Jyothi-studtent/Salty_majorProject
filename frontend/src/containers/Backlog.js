@@ -275,7 +275,7 @@ const DraggableIssue = ({ issue, projectid, onissueTypeChange, onDragStart, onDr
   // }, [isDragging, clientOffset]);
  
 
-
+const token = useSelector((state) => state.auth.access);
   const user=useSelector(state => state.auth.user); 
   const [dropdownVisible, setDropdownVisible] = useState(false);
   const [dropdownEpics, setDropdownEpics] = useState(false);
@@ -378,7 +378,14 @@ const DraggableIssue = ({ issue, projectid, onissueTypeChange, onDragStart, onDr
           projectId: projectid,
           oldIssueName: issue.IssueName,
           newIssueName: editedIssueName,
-        });
+        },
+        {
+          headers: {
+            Authorization: `JWT ${token}`, 
+            "Content-Type": "application/json",
+          },
+        }
+      );
         onissueTypeChange(true);
       } catch (error) {
         console.error("Error updating issue name:", error);

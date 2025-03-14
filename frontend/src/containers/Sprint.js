@@ -10,7 +10,7 @@ import Backlog from './Backlog';
 import axios from 'axios';
 import { FaPencilAlt } from 'react-icons/fa';
 import { useDrop } from 'react-dnd';
-
+import { useSelector } from "react-redux";
 const Sprint = ({ sprint, fetchData, onSprintDelete, setissueDragged = null, onissueTypeChange,toggleTrigger }) => {
   const { projectid } = useParams();
   const [action,setActions]=useState("");
@@ -24,13 +24,16 @@ const Sprint = ({ sprint, fetchData, onSprintDelete, setissueDragged = null, oni
   const [backlogsListOpen, setBacklogsListOpen] = useState(true);
   const [showSprintForm, setShowSprintForm] = useState(false);
   const navigate = useNavigate();
-
+  const token = useSelector((state) => state.auth.access);
   const dropdownRef = useRef(null);
   const fetchIssues = async () => {
     try {
-     
+     console.log("token is hereee",token)
       const response = await axios.get("http://localhost:8000/djapp/issuesOfSprint/", {
-        params: { projectId: projectid, sprintName: sprint.sprint }
+        params: { projectId: projectid, sprintName: sprint.sprint }, 
+        headers: {
+          Authorization: `JWT ${token}`, // 🔹 Pass token from Redux state
+        }
       });
       setIssues(response.data);
       setIssueStatusChanged(false);
@@ -57,7 +60,9 @@ const Sprint = ({ sprint, fetchData, onSprintDelete, setissueDragged = null, oni
       setActions('start')
       setButtonType('complete');
       const response = await axios.get("http://localhost:8000/djapp/updateSprintStatus/", {
-        params: { projectId: projectid, sprintName: sprint.sprint,status:"complete" }
+        params: { projectId: projectid, sprintName: sprint.sprint,status:"complete" },headers: {
+          Authorization: `JWT ${token}`, // 🔹 Pass token from Redux state
+        }
       });
       
       navigate(`/project/${projectid}/boards?sprintName=${encodeURIComponent(sprint.sprint)}`);
@@ -94,7 +99,9 @@ const Sprint = ({ sprint, fetchData, onSprintDelete, setissueDragged = null, oni
     if (confirmDelete) {
       try {
         await axios.get("http://localhost:8000/djapp/delete_sprint/", {
-          params: { projectId: projectid, sprintName: sprint.sprint }
+          params: { projectId: projectid, sprintName: sprint.sprint },headers: {
+            Authorization: `JWT ${token}`, // 🔹 Pass token from Redux state
+          }
         });
         onissueTypeChange(true);
         fetchData()

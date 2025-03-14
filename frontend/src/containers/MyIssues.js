@@ -5,6 +5,7 @@ import IssueCard from '../components/IssueCard';
 import DisplayIssueFilters from './DisplayIssueFilters';
 import DisplayIssueFiltersWithoutPop from './DisplayIssueFiltersWithoutPop';
 import Comment from './Comment';
+import { useNavigate,useParams } from 'react-router-dom';
 import IssueCardHorizontal from './IssueCardHorizontal';
 import './css/FiltersCss.css';
 import Scroll from '../components/Scroll';
@@ -13,22 +14,33 @@ import ProjectPage from './ProjectPage';
 import AddTeamMembers from './Add_team_members';
 
 function MyIssues({ user, isSidebarCollapsed }) {
-  const [selectedProject, setSelectedProject] = useState('');
   const [projects, setProjects] = useState([]);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [data, setData] = useState([]);
   const [selectedFilter, setSelectedFilter] = useState('assigned_to_me');
   const [selectedIssue, setSelectedIssue] = useState(null);
   const [viewType, setViewType] = useState('detailed');
+const {group_id} = useParams();
+const { projectid } = useParams();
+const [selectedProject, setSelectedProject] = useState(projectid);
 
   useEffect(() => {
     if (!user || !user.email) return;
     const fetchProjects = async () => {
       try {
-        const response = await axios.get(`http://localhost:8000/djapp/project_list/?email=${user.email}`);
+        const response = await axios.get(`http://localhost:8000/djapp/project_list/?email=${user.email}&group_id=${group_id}`);
         setProjects(response.data || []);
       } catch (error) {
         console.error('Error fetching projects:', error);
+        let errorMessage = "Error fetching projects:";
+
+      if (error.response) {
+          errorMessage = error.response.data.error || "Something went wrong.";
+      } else if (error.request) {
+          errorMessage = "No response from server. Check your internet connection.";
+      }
+
+      alert(errorMessage);
       }
     };
     fetchProjects();
@@ -49,7 +61,16 @@ function MyIssues({ user, isSidebarCollapsed }) {
         setData(response.data);
       } catch (error) {
         console.error("There was an error fetching the data!", error);
+        let errorMessage = "There was an error fetching the data!";
+
+      if (error.response) {
+          errorMessage = error.response.data.error || "Something went wrong.";
+      } else if (error.request) {
+          errorMessage = "No response from server. Check your internet connection.";
       }
+
+      alert(errorMessage);
+     }
     };
     fetchData();
   }, [selectedFilter, selectedProject, user]);

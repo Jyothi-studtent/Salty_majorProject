@@ -12,7 +12,7 @@ import AssigneeSelector from './AssigneeSelector';
 import ProjectPage from "./ProjectPage";
 import './css/board.css'; // Importing the CSS file
 import BoardsIssueDisplay from './BoardsIssueDisplay';
-
+import { useSelector } from "react-redux";
 const ItemType = 'ITEM';
 
 const issueTypeToIcon = {
@@ -153,6 +153,15 @@ const DropZone = ({ id, items, setItems, onDrop, projectid, user, selectedSprint
       setReload(prev => !prev); // Trigger reload
     } catch (error) {
       console.log("Error creating issue:", error);
+      let errorMessage = "Failed to load team members. Please try again later.";
+
+            if (error.response) {
+                errorMessage = error.response.data.error || "Something went wrong.";
+            } else if (error.request) {
+                errorMessage = "No response from server. Check your connection.";
+            }
+
+            alert(errorMessage); 
     }
 
     setNewIssueName('');
@@ -252,6 +261,7 @@ const Board = ({ user }) => {
   const [sprintOptions, setSprintOptions] = useState([]);
   const { projectid } = useParams();
   const location = useLocation();
+  const token = useSelector((state) => state.auth.access);
   const searchParams = new URLSearchParams(location.search);
   const sprintName = searchParams.get('sprintName');
   const [reload, setReload] = useState(false); // State to trigger re-render
@@ -260,7 +270,9 @@ const Board = ({ user }) => {
     if (selectedSprint) {
       try {
         const response = await axios.get("http://localhost:8000/djapp/issuesOfSprint/", {
-          params: { projectId: projectid, sprintName: selectedSprint }
+          params: { projectId: projectid, sprintName: selectedSprint },headers: {
+            Authorization: `JWT ${token}`, // 🔹 Pass token from Redux state
+          }
         });
         const issues = response.data;
         setIssues(issues);
@@ -270,6 +282,15 @@ const Board = ({ user }) => {
         setItems3(issues.filter(item => item.status === 'Done'));
       } catch (error) {
         console.error("Error fetching issues:", error);
+        let errorMessage = "Failed to load team members. Please try again later.";
+
+            if (error.response) {
+                errorMessage = error.response.data.error || "Something went wrong.";
+            } else if (error.request) {
+                errorMessage = "No response from server. Check your connection.";
+            }
+
+            alert(errorMessage); 
       }
     }
   };
@@ -285,6 +306,15 @@ const Board = ({ user }) => {
       }
     } catch (error) {
       console.error('Error fetching sprints:', error);
+      let errorMessage = "Error fetching sprints:. Please try again later.";
+
+            if (error.response) {
+                errorMessage = error.response.data.error || "Something went wrong.";
+            } else if (error.request) {
+                errorMessage = "No response from server. Check your connection.";
+            }
+
+            alert(errorMessage); 
     }
   };
 
@@ -321,6 +351,16 @@ const Board = ({ user }) => {
       setReload(prev => !prev); // Toggle the reload state to trigger re-render
     } catch (error) {
       console.error("Error updating item status:", error);
+      let errorMessage = "Error updating item status:. Please try again later.";
+
+            if (error.response) {
+                errorMessage = error.response.data.error || "Something went wrong.";
+            } else if (error.request) {
+                errorMessage = "No response from server. Check your connection.";
+            }
+
+            alert(errorMessage); 
+      
     }
   };
 
@@ -328,6 +368,7 @@ const Board = ({ user }) => {
     const allIssuesDone = issues.every(issue => issue.status === 'Done');
     if (allIssuesDone) {
       const confirmComplete = window.confirm("This sprint is completed. Well done! Do you want to complete it?");
+      console.log("confirmmmmm",confirmComplete)
       if (confirmComplete) {
         await axios.get("http://localhost:8000/djapp/updateSprintStatus/", {
           params: { projectId: projectid, sprintName: selectedSprint,status:"completed" }

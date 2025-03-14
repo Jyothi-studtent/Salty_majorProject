@@ -32,6 +32,15 @@ const CreateGroup = ({ createGroup }) => {
             navigate(`/group/${groupId}/project`); // Navigate to project page after group creation
         } catch (error) {
             console.error('Error creating group:', error);
+            let errorMessage = "Error creating group:";
+
+      if (error.response) {
+          errorMessage = error.response.data.error || "Something went wrong.";
+      } else if (error.request) {
+          errorMessage = "No response from server. Check your internet connection.";
+      }
+
+      alert(errorMessage);
         }
     };
 

@@ -147,7 +147,7 @@ class Epic(models.Model):
     
 
 class issue(models.Model):
-    IssueName = models.CharField(max_length=30,default="",unique=True)
+    IssueName = models.CharField(max_length=30,default="",unique=False)
     issue_id = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
     sprint = models.ForeignKey(Sprint, on_delete=models.SET_NULL, null=True, blank=True,default="null")
     projectId = models.ForeignKey(Project, on_delete=models.SET_NULL, null=True, blank=True,default="null")
@@ -160,6 +160,11 @@ class issue(models.Model):
     assigned_epic=models.ForeignKey(Epic, on_delete=models.SET_NULL, null=True, blank=True,default="")
     StoryPoint = models.IntegerField(default=1)
     Priority = models.CharField(max_length=30,default="")
+    class Meta:
+        unique_together = ("projectId", "IssueName")
+
+    def __str__(self):
+        return f"{self.IssueName} ({self.projectId})"
 
 from django.utils import timezone
 class Comments(models.Model):

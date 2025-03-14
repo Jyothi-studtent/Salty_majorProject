@@ -156,7 +156,16 @@ const SprintForm = ({ closeForm, sendDataToParent, initialFormData, closeDropDow
       // }
       onSprintDelete(true);
     } catch (error) {
-      console.error("Error submitting the form:", error);
+      console.error("Error fetching comments", error);
+      let errorMessage = "Error fetching comments";
+
+      if (error.response) {
+          errorMessage = error.response.data.error || "Something went wrong.";
+      } else if (error.request) {
+          errorMessage = "No response from server. Check your internet connection.";
+      }
+
+      alert(errorMessage);
     }
   };
 

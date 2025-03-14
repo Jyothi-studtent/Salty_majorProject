@@ -34,6 +34,15 @@ const DisplayIssueFilters = ({ data, user }) => {
         setSprintOptions(sprintsResponse.data.sprint_in_project);
       } catch (error) {
         console.error('Error fetching team members and sprints:', error);
+        let errorMessage = "Error fetching team members and sprints:, Please try again later.";
+
+        if (error.response) {
+            errorMessage = error.response.data.error || "Something went wrong.";
+        } else if (error.request) {
+            errorMessage = "No response from server. Check your connection.";
+        }
+
+        alert(errorMessage); 
       }
     };
 
@@ -85,6 +94,15 @@ const DisplayIssueFilters = ({ data, user }) => {
       setIsEditing(false);
     } catch (error) {
       console.error("There was an error updating the issue!", error);
+      let errorMessage = "There was an error updating the issue!:, Please try again later.";
+
+        if (error.response) {
+            errorMessage = error.response.data.error || "Something went wrong.";
+        } else if (error.request) {
+            errorMessage = "No response from server. Check your connection.";
+        }
+
+        alert(errorMessage); 
     }
   };
 
@@ -95,6 +113,15 @@ const DisplayIssueFilters = ({ data, user }) => {
         setProjects(response.data || []);
       } catch (error) {
         console.error('Error fetching projects:', error);
+        let errorMessage = "TError fetching projects, Please try again later.";
+
+        if (error.response) {
+            errorMessage = error.response.data.error || "Something went wrong.";
+        } else if (error.request) {
+            errorMessage = "No response from server. Check your connection.";
+        }
+
+        alert(errorMessage); 
       }
     };
 

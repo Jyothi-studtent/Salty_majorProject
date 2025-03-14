@@ -21,6 +21,15 @@ const ProjectList = ({ user, clickProject }) => {
                 setProjects(response.data);
             } catch (error) {
                 console.error('Error fetching projects:', error);
+                let errorMessage = "Error fetching projects:";
+
+      if (error.response) {
+          errorMessage = error.response.data.error || "Something went wrong.";
+      } else if (error.request) {
+          errorMessage = "No response from server. Check your internet connection.";
+      }
+
+      alert(errorMessage);
             }
         };
 

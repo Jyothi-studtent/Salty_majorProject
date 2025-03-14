@@ -15,7 +15,7 @@ import AddTeamMembers from './Add_team_members';
 
 const Filters = ({ isAuthenticated, user, isSidebarCollapsed }) => {
   const { projectid } = useParams();
-  const [selectedFilter, setSelectedFilter] = useState('');
+  const [selectedFilter, setSelectedFilter] = useState('all_issues');
   const [statusFilter, setStatusFilter] = useState('');
   const [currentUser, setCurrentUser] = useState('');
   const [data, setData] = useState([]);
@@ -44,6 +44,15 @@ const Filters = ({ isAuthenticated, user, isSidebarCollapsed }) => {
         setData(response.data);
       } catch (error) {
         console.error("There was an error fetching the data!", error);
+        let errorMessage = "There was an error fetching the data!";
+
+        if (error.response) {
+            errorMessage = error.response.data.error || "Something went wrong.";
+        } else if (error.request) {
+            errorMessage = "No response from server. Check your internet connection.";
+        }
+  
+        alert(errorMessage);
       }
     };
 

@@ -33,6 +33,15 @@ const Profile = ({ user }) => {
         setProfileData(response.data);
       } catch (error) {
         console.error('Error fetching profile data:', error);
+        let errorMessage = "Error fetching profile data:";
+
+      if (error.response) {
+          errorMessage = error.response.data.error || "Something went wrong.";
+      } else if (error.request) {
+          errorMessage = "No response from server. Check your internet connection.";
+      }
+
+      alert(errorMessage);
       }
     };
 
@@ -92,6 +101,15 @@ const Profile = ({ user }) => {
       setIsEditing({ ...isEditing, [field]: false });
     } catch (error) {
       console.error('Error updating profile data:', error);
+      let errorMessage = "Error updating profile data:";
+
+      if (error.response) {
+          errorMessage = error.response.data.error || "Something went wrong.";
+      } else if (error.request) {
+          errorMessage = "No response from server. Check your internet connection.";
+      }
+
+      alert(errorMessage);
     }
   };
 

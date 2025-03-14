@@ -28,6 +28,15 @@ function Comment({ user, data }) {
       fetchComments(); // Fetch comments again after submitting a new comment
     } catch (error) {
       console.error('Error creating comment', error);
+      let errorMessage = "Error creating comments";
+
+      if (error.response) {
+          errorMessage = error.response.data.error || "Something went wrong.";
+      } else if (error.request) {
+          errorMessage = "No response from server. Check your internet connection.";
+      }
+
+      alert(errorMessage);
     }
   };
 
@@ -37,6 +46,15 @@ function Comment({ user, data }) {
       setComments(response.data);
     } catch (error) {
       console.error('Error fetching comments', error);
+      let errorMessage = "Error fetching comments";
+
+      if (error.response) {
+          errorMessage = error.response.data.error || "Something went wrong.";
+      } else if (error.request) {
+          errorMessage = "No response from server. Check your internet connection.";
+      }
+
+      alert(errorMessage);
     }
   };
 
@@ -58,6 +76,16 @@ function Comment({ user, data }) {
       fetchComments(); // Fetch comments again after editing a comment
     } catch (error) {
       console.error('Error editing comment', error);
+      let errorMessage = "Error editing comments";
+
+      if (error.response) {
+          errorMessage = error.response.data.error || "Something went wrong.";
+      } else if (error.request) {
+          errorMessage = "No response from server. Check your internet connection.";
+      }
+
+      alert(errorMessage);
+
     }
   };
 

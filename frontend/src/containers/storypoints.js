@@ -17,6 +17,15 @@ export default function IssueStorypoints({ issueName ,pid,onissueTypeChange}) {
     try {
       await axios.post('http://localhost:8000/djapp/update_storypoints/', { issue:issueName.IssueName ,status:newStatus,projectId:pid});    } catch (error) {
       console.error('Error updating issue storypoints:', error);
+      let errorMessage = "Error updating issue storypoints:";
+
+      if (error.response) {
+          errorMessage = error.response.data.error || "Something went wrong.";
+      } else if (error.request) {
+          errorMessage = "No response from server. Check your internet connection.";
+      }
+
+      alert(errorMessage);
     }
   };
 

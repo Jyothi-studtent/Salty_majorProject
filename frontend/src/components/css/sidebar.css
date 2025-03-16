@@ -1,0 +1,129 @@
+/* Updated sidebar.css */
+
+.page.sidebar-3-page::after {
+  content: "";
+  position: fixed;
+  z-index: -1;
+  inset: 0;
+  width: 1rem;
+}
+
+.sidebar-3 {
+  position: absolute;
+  z-index: 1; /* Ensure the sidebar is above the content */
+  top: 57px; /* Height of the navbar */
+  bottom: 0; /* Occupy the entire remaining height */
+  width: 56px;
+  background: #bd055e; /* Same as the navbar background color */
+  backdrop-filter: blur(10px);
+  transition: width 0.45s;
+  color: white;
+}
+
+.sidebar-3 .material-symbols-outlined {
+  font-size: 20px;
+}
+
+.sidebar-3.open {
+  width: 190px;
+}
+
+.sidebar-3 .inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+.sidebar-3 header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 64px;
+  width: 100%;
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+  padding: 0 6px;
+}
+
+.sidebar-3-burger {
+  width: 44px;
+  height: 44px;
+  display: grid;
+  place-items: center;
+  border: none;
+  background: rgb(0 0 0 / 25%);
+}
+
+.sidebar-3 header > img {
+  height: 18px;
+}
+
+.sidebar-3 nav {
+  display: grid;
+  padding: 0 6px;
+  gap: 2px;
+  width: 100%;
+}
+
+.sidebar-3 nav > button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  height: 44px;
+  width: 100%;
+  font-family: "Poppins";
+  font-size: 14px;
+  text-transform: capitalize;
+  line-height: 1;
+  padding: 0 12px;
+  border-radius: 8px;
+  opacity: 0.7;
+  transition: background 0.3s, opacity 0.3s, transform 0.3s;
+  
+
+}
+
+.sidebar-3 nav > button:hover {
+  background: rgb(0 0 0 / 30%);
+  opacity: 1;
+}
+
+.sidebar-3 nav > button span {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+ 
+
+}
+
+.sidebar-3 nav > button p {
+  opacity: 0;
+  transition: opacity 0.25s, transform 0.25s;
+  color: black;
+
+}
+
+.sidebar-3.open nav > button p {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.sidebar-3:not(.open) nav > button p {
+  transform: translateX(-20px);
+}
+
+.sidebar-3.open nav > button {
+  justify-content: flex-start;
+}
+
+.project-id {
+  margin-top: auto;
+  padding: 10px;
+  text-align: center;
+  width: 100%;
+}
+

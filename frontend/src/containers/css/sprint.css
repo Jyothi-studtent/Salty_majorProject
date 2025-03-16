@@ -1,0 +1,384 @@
+/* General Styles
+
+
+*/
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f0f2f5;
+  color: #333;
+  margin: 0;
+  padding: 0;
+}
+
+
+.button-sprint {
+  background-color: #a8406a;
+  padding: 5px 10px;
+  color: #fff;
+  border: none;
+  border-radius: 2px;
+  cursor: pointer;
+  outline: none;
+  transition: background-color 0.3s ease;
+}
+
+.button-sprint:hover {
+  background-color: #a8406a;
+}
+
+
+.left-section {
+  display: flex;
+  flex-direction: row;
+}
+
+.right-section {
+  position: relative;
+  display: flex;
+}
+
+.pencilIcon {
+  display: flex;
+  flex-direction: row;
+}
+
+
+.chotadabba1 {
+  /* font-weight: ; */
+}
+
+.chotadabba1, .chotadabba, .chotadabba2 {
+  margin-bottom: 10px;
+}
+
+.chotadabba {
+  margin-right: 7px; /* Minimized space between chotadabba and chotadabba2 */
+}
+
+
+
+.right1 {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.Dropdown {
+  position: relative;
+  cursor: pointer;
+  background: none;
+  border: none;
+  color: #8a1d1d;
+  margin-left: 15px;
+  font-size: 18px;
+}
+
+.Dropdown-Content {
+  display: block;
+  position: absolute;
+  right: 0;
+  background-color: #fff;
+  min-width: 120px;
+  box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+  z-index: 1;
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+.Dropdown-Content span {
+  padding: 12px 16px;
+  display: block;
+  color: #333;
+  text-decoration: none;
+}
+
+.Dropdown-Content span:hover {
+  background-color: #f1f1f1;
+}
+
+.Dropdown:hover .dropdown-Content {
+  display: block;
+}
+.sprint-first{
+  width:100%
+}
+/* Additional Styles */
+.Dotted-box {
+  width: 100%;
+  padding: 20px;
+  border: 2px dotted #999;
+  margin-top: 20px;
+  border-radius: 10px;
+}
+
+.solid-box {
+  width: 100%;
+  padding: 10px;
+  border: none;
+  margin-top: 20px;
+  border-radius: 5px;
+ 
+  box-sizing: border-box;
+}
+
+.issueType {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.issueType .value {
+  position: relative;
+}
+
+.edit-icon {
+  display: none;
+  margin-left: 8px;
+  cursor: pointer;
+  width: 16px;
+  height: 16px;
+}
+
+.input-item:hover .edit-icon {
+  display: inline;
+}
+.usericon-dropdown {
+  position: absolute;
+  background-color: #f0f0f0;
+  left: auto;
+  z-index: 1;
+  white-space: nowrap;
+}
+.scroll-container{
+  height:fit-content;
+}
+
+
+
+.input-item {
+  position:relative;
+  background-color: #eae9e9;
+  border-bottom: 1px solid #ccc;
+  padding: 10px;
+  margin-bottom: 10px;
+  display: flex;
+  height: fit-content;
+  width: auto;
+  align-items: center;
+}
+
+.right-most {
+  position: absolute;
+  left: 600px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.right {
+  margin-right: 10px;
+  
+  
+}
+
+.right1 {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-left: 10px;
+}
+
+.assignee-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.assignee {
+  cursor: pointer;
+}
+
+
+.assignee-icon {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background-color: #a8406a;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  font-weight: bold;
+}
+
+#userIcon {
+  cursor: pointer;
+  color:#ddd;
+  margin-left: 10px;
+}
+
+.usericon-dropdown {
+  position: absolute;
+  top: 30px;
+  left: auto;
+  background-color: #eae9e9;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  padding: 5px 0;
+  z-index: 100000;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.usericon-dropdown-item {
+  padding: 8px 12px;
+  cursor: pointer;
+  border-bottom: #5a4646;
+}
+
+.usericon-dropdown-item:hover {
+  background-color: #eae9e9;
+}
+
+.Dropdown {
+  cursor: pointer;
+}
+
+.addEpic {
+  position: absolute;
+  left: 600px;
+  display: flex;
+  align-items: center;
+}
+
+.addEpic .epic,
+.addEpic .add {
+  display: none;
+  margin-left: 10px;
+  cursor: pointer;
+}
+
+.input-item:hover .addEpic .epic,
+.input-item:hover .addEpic .add {
+  display: inline-block;
+}
+
+.value {
+  margin-left: 8px;
+}
+
+.create-issue {
+  position:relative;
+
+  margin-top: 20px;
+}
+
+.issueCreation {
+  display: flex;
+  align-items: center;
+ width:100%
+ 
+}
+
+.EnterIssue {
+  min-height: 40px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  padding: 5px;
+  width: 100%;
+}
+
+.issue-done {
+  text-decoration: line-through;
+}
+
+.dropdown-menu {
+  position: absolute;
+  top: 20px; /* Adjust as needed to position below "Epic" and "+" */
+  left: 0; /* Adjust as needed to align with "Epic" and "+" */
+  background-color: white;
+  border: 1px solid #ddd;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  white-space: nowrap;
+}
+
+.selected-epic {
+  display: block;
+  font-weight: bold;
+  color: #000; /* Adjust color as needed */
+}
+
+.dropdown-Item {
+  padding: 10px 12px;
+  width: auto;
+  cursor: pointer;
+  display: flex; /* Use flexbox to ensure items are in the same line */
+  align-items: center; /* Center items vertically */
+  justify-content: space-between;
+}
+
+.react-icon {
+  width: 2rem;
+  height: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  background-color: transparent;
+  cursor: pointer;
+  font-size: 40px;
+}
+
+.react-icon svg {
+  width: 100%;
+  height: 100%;
+}
+
+.dropdown-Item:hover {
+  background-color: #f0f0f0;
+}
+
+.assignee-icon {
+  margin-top: 0;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background-color: #ccc;
+  padding: 5px 5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 10px;
+  background-size: cover;
+}
+
+.usericon-dropdown {
+  position: absolute;
+  background-color: #fffafa;
+  left: auto;
+  z-index: 1000;
+}
+
+.assignee-container {
+  display: flex;
+  flex-direction: row;
+}
+
+/* Responsive Design */
+
+
+
+.sprints-empty {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Ensure the last backlog component moves down dynamically */
+.backlogsList {
+  margin-top: 20px;
+}
+
+

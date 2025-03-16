@@ -1,0 +1,169 @@
+/* Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Open+Sans:wght@400;500&display=swap');
+
+/* Font Styles */
+.heading-font {
+    font-family: 'Montserrat', sans-serif;
+}
+
+.content-font {
+    font-family: 'Open Sans', sans-serif;
+}
+
+
+/* Color Palette */
+/* Color Palette */
+.first-color {
+  background: #fafafa;
+}
+.second-color {
+  background: #bd055e;
+}
+.third-color {
+  background: #9c1647;
+}
+.fourth-color {
+  background: #e2719d;
+}
+
+
+/* Login Page Styles */
+.login-page {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #fafafa;
+}
+
+.login-container {
+    background-color: white;
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+}
+
+.login-title {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 700;
+  color: #333;
+  margin-bottom: 1rem;
+}
+
+.login-text, .sign-google, .login-form-control {
+  font-family: 'Open Sans', sans-serif;
+  font-weight: 500;
+  color: #666;
+}
+
+.login-form-control {
+  width: 100%;
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  margin-top: 0.5rem;
+}
+
+.login-form-group {
+    margin-bottom: 1rem;
+    text-align: left;
+}
+
+
+.login-btn {
+    display: inline-block;
+    padding: 0.75rem 1.5rem;
+    font-family: 'Work Sans', sans-serif;
+    font-weight: 500;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    text-align: center;
+    transition: background-color 0.3s ease;
+    width: 100%;
+}
+
+.login-btn-primary {
+    background-color: #ff347f;
+    color: white;
+}
+
+.login-btn-primary:hover {
+    background-color: #c9356c;
+}
+
+.login-google-btn {
+  background-color: #e6e6e6;
+  color: #333;
+  display: flex; /* Use flexbox to align content */
+  justify-content: center; /* Center content horizontally */
+  align-items: center; /* Center content vertically */
+  width: 100%;
+  padding: 0.75rem 1.5rem;
+  margin-top: 1rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  text-align: center;
+  transition: background-color 0.3s ease;
+}
+
+/* Adjust hover styles as needed */
+.login-google-btn:hover {
+  background-color: #dcdcdc;
+}
+
+.sign-google {
+  margin-left: 0.5rem;
+  font-family: 'Open Sans', sans-serif;
+  font-weight: 500;
+}
+
+
+.login-recovery {
+    text-align: right;
+    margin-top: -0.5rem;
+    margin-bottom: 1rem;
+}
+
+.login-link {
+    color: #ff347f;
+    text-decoration: none;
+}
+
+.login-link:hover {
+    text-decoration: underline;
+}
+.login-error-popup {
+  position: fixed;
+  top: 15%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #fff;
+  padding: 20px;
+  border: 1px solid #ff347f;
+  border-radius: 4px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  z-index: 9999; /* Ensure it's above other elements */
+}
+
+.login-error-popup h5 {
+  margin: 0;
+  color: #ff347f;
+}
+#login-mess{
+  position: fixed;
+  top: 15%;
+  left: 38%;
+  color: #ff347f;
+  background-color: #fff;
+  padding: 7px 28px;
+  width: 300px;
+  border: 1px solid #ff347f;
+  border-radius: 4px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+

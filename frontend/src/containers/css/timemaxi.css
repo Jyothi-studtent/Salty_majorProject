@@ -1,0 +1,123 @@
+/* Container styles */
+.container {
+    overflow-x: auto;
+    width: 100%;
+  }
+  
+  .export-button-maxi{
+    position: relative;
+    top: 36px;
+    background-color:#ccc;
+    left: 60px;
+     
+    color: black;
+    padding: 7px 20px; /* Adjust padding as needed */
+    border: none;
+    border-radius: 3px; /* Adjust border radius as needed */
+    cursor: pointer;
+    font-size: 14px;
+
+  }
+  
+  /* SVG styles */
+  svg {
+    font-family: Arial, sans-serif;
+   
+  
+  }
+  .svgmaxi{
+  
+  }
+  .forflex{
+    display: flex;
+  }
+  
+  /* Month label styles */
+  .month-label {
+    font-size: 14px;
+    fill: #333;
+  }
+  
+  /* Day label styles */
+  .day-label {
+    font-size: 12px;
+    fill: #666;
+  }
+  
+  /* Vertical line styles */
+  .vertical-line {
+    stroke: #ccc;
+  }
+  .popuptime {
+    position: absolute;
+    background-color: rgb(255, 255, 255);
+    padding: 15px;
+    width: 300px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+  }
+  
+  .popuptime p {
+    margin: 5px 0;
+    font-size: 14px;
+  }
+  
+  .popuptime strong {
+    font-size: 16px;
+    font-weight: bold;
+  }
+  
+  .popuptime button {
+    margin-top: 10px;
+    padding: 4px 12px;
+    background-color: #a8406a;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  .popuptime button:hover {
+    background-color:  #a8406a;
+  }
+  .colsprint {
+    position: relative; /* Change absolute to relative */
+    margin-top: 27px; 
+  }
+  
+ .mini{
+  position: relative;
+  top: 40px;
+  left: 20px;
+  z-index: 1;
+ }
+
+.future-sprint {
+  color: blue;
+  font-weight: bold;
+}
+
+.active-sprint {
+  color: green;
+  font-weight: bold;
+}
+
+.closed-sprint {
+  color: red;
+  font-weight: bold;
+}
+
+.centered-popup {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: white; /* Adjust the background color as needed */
+  border: 1px solid #ccc; /* Adjust the border as needed */
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Optional: Add a shadow */
+  padding: 20px; /* Adjust padding as needed */
+  z-index: 1000; /* Ensure the popup appears above other content */
+  width: 300px; /* Adjust the width as needed */
+ 
+}

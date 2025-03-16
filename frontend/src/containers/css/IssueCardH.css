@@ -1,0 +1,43 @@
+.issue-card-horizontal-h {
+  margin-left: 1rem;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  margin-top: 0;
+}
+
+.details-h {
+  background-color: #dfe2e3;
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+  display: grid;
+  grid-template-columns: 1fr 2fr 4fr 2fr 1fr 1fr 1fr; /* Adjusted to give more space to description */
+  gap: 1rem; /* Space between grid items */
+  align-items: center; /* Align items vertically in the center */
+  padding: 1rem; /* Add padding for better spacing */
+  border-radius: 5px; /* Add border-radius for rounded corners */
+}
+
+.description-h {
+  overflow-y: hidden; /* Use scroll to allow scrolling */
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none;  /* Internet Explorer 10+ */
+}
+
+.description-h::-webkit-scrollbar { 
+  display: none;  /* Safari and Chrome */
+}
+
+span {
+  white-space: nowrap; /* Prevent wrapping of text */
+  text-overflow: ellipsis; /* Display ellipsis (...) for overflowed text */
+  overflow: hidden; /* Ensure overflow is hidden */
+  margin-right: 0.5rem; /* Add margin between spans */
+}
+
+span:last-child {
+  margin-right: 0; /* Remove margin from the last span */
+}
+
+.prority-h {
+  /* Remove unnecessary margin */
+}

@@ -1,0 +1,254 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+}
+
+.content {
+    text-align: center;
+}
+
+.welcome-header, .salty-header, .button-div {
+    margin-bottom: 20px;
+}
+
+.cards-section {
+    display: flex;
+    justify-content: space-around;
+    width: 100%;
+    padding: 20px 0;
+}
+
+.card-container {
+    background-color: #bd055e;
+    display: flex;
+    justify-content: space-around;
+    padding: 20px;
+}
+
+.card {
+    background-color: white;
+    text-align: center;
+    height: 10rem;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-shadow: 10px 10px 10px rgba(0.1, 0.1, 0.1, 0.1);
+    flex: 1;
+    max-width: 300px; /* Reduce the width of the cards */
+}
+
+.card p{
+    text-align: left;
+    color: dimgray;
+}
+
+.card-header {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 10px;
+}
+
+.card-icon {
+    font-size: 2rem;
+}
+
+.management-section {
+    text-align: center;
+    padding: 20px 0;
+}
+
+.short-container {
+    display: flex;
+    align-items: flex-start;
+    padding: 20px;
+    font-family: 'Open Sans', 'Helvetica Neue', sans-serif;
+    min-height: 17rem; /* Adjust height as needed */
+    position: relative;
+    color: rgb(32, 30, 30); /* Optional: Ensures text is readable on background */
+}
+
+.short-container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    background-image: url('./salt.jpeg');
+    background-size: cover;
+    background-position: center;
+    filter: blur(1px); /* Adjust the blur intensity */
+    z-index: -1; /* Ensures the blurred background is behind the content */
+}
+
+.rhs {
+    flex: 1;
+    letter-spacing: 0.1rem;
+    text-align: center; /* Center text horizontally */
+    padding-right: 20px; /* Space between text and images */
+    position: relative;
+    z-index: 1; /* Ensure text is above the background image */
+}
+
+.rhs h1 {
+    font-size: 3rem; /* Adjust font size for the top line */
+    margin-bottom: 10px;
+    letter-spacing: 0.5rem;
+}
+
+.rhs h3 {
+    letter-spacing: 0.1rem;
+    font-size: 1.5rem; /* Adjust font size for the subtitle */
+}
+
+
+
+.lhs {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end; /* Align images to the right */
+    position: relative;
+    z-index: 1; /* Ensure images are above the background image */
+}
+
+.lhs img {
+    max-width: 150px; /* Adjust size as needed */
+    height: auto;
+    margin-bottom: 10px; /* Space between images */
+}
+
+.lhs img.up-right-align {
+    align-self: flex-end; /* Align the first image to the right */
+}
+
+.lhs img.down-left-align {
+    align-self: flex-end; /* Align the second image to the right */
+}
+.contact-container {
+    display: flex;
+    justify-content: space-between; /* Aligns content to the left and right */
+    padding: 20px;
+    background-color: black;
+    color: white;
+    text-align: left; /* Align text to the left */
+}
+
+.contact-details {
+    max-width: 50%; /* Adjust width as needed */
+}
+
+.contact-links {
+    max-width: 50%; /* Adjust width as needed */
+    text-align: right; /* Align text to the right */
+}
+
+.contact-details p {
+    margin: 0;
+}
+
+.contact-links a {
+    display: block; /* Make each link appear on a new line */
+    color: white;
+    text-decoration: none;
+    margin: 5px 0;
+}
+
+.contact-links a:hover {
+    text-decoration: underline;
+}
+
+
+.intro-container {
+    position: relative;
+    height: 86vh;
+    width: 100vw;
+    margin-top: 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-top: 3.5rem;
+    color: black;
+    text-align: center;
+    flex-direction: column; /* Center elements vertically */
+    overflow: hidden; /* To ensure the pseudo-element doesn't overflow */
+}
+
+.intro-container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    background-image: url(./salt.jpeg);
+    background-size: cover;
+    background-position: center;
+    filter: blur(1px); /* Adjust the blur intensity */
+    z-index: -1; /* Ensure the blurred background is behind the content */
+}
+
+.salty-header {
+    display: flex;
+    flex-direction: row;
+    justify-content: center; /* Center the SALTY text horizontally */
+}
+
+.salty-header h1 {
+    font-size: 6rem;
+    font-weight: normal;
+    letter-spacing: 1rem;
+    margin: 0;
+    animation: slideIn 1s ease forwards;
+}
+
+.content {
+    display: flex;
+    flex-direction: column; /* Stack elements vertically */
+    align-items: center; /* Center elements horizontally */
+    justify-content: center; /* Center elements vertically */
+}
+
+.welcome-header {
+    padding: 2rem;
+    font-size: 2rem; /* Smaller font size */
+    font-weight: lighter;
+    letter-spacing: 2rem; /* Add spacing between characters */
+    animation: slideIn 1s ease forwards;
+}
+
+.button-div {
+    display: flex;
+    column-gap: 2rem;
+    margin-top: 2rem; /* Add margin to space the button from the text */
+}
+
+.continue-to-login {
+    height: 3rem;
+    width: 10rem;
+    border-radius: 4px;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    background-color: #bd055e;
+    color: white;
+}
+
+.continue-to-login:hover{
+    background-color: #a2185b;
+}
+
+@keyframes slideIn {
+    0% {
+        transform: translateX(-100%);
+        opacity: 0;
+    }
+    100% {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}

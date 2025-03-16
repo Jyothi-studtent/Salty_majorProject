@@ -1,0 +1,92 @@
+.comments-list {
+  margin-top: 20px;
+}
+
+.comment-item {
+  display: flex;
+  flex-direction: column; /* Display items in a column */
+  padding: 10px 0;
+  position: relative;
+}
+
+.comment-item:nth-child(odd) {
+  background-color: #f9f9f9; /* Light gray for odd comments */
+  margin-bottom: 1rem;
+  border-radius: 5px;
+}
+
+.comment-item:nth-child(even) {
+  background-color: #efefef; /* Lighter gray for even comments */
+  margin-bottom: 1rem;
+  border-radius: 5px;
+}
+
+.comment-body {
+  font-size: 16px;
+  margin-bottom: 5px;
+}
+
+.comment-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 5px;
+}
+
+.comment-author-date {
+  color: #777;
+  font-size: 12px;
+}
+
+.comment-edit-pen {
+  color: #7f7c7c;
+  cursor: pointer;
+  transition: color 0.3s ease;
+  font-size: 16px;
+}
+
+.comment-edit-pen:hover {
+  color: #e10f7b;
+}
+
+.comment-edit-pen:active {
+  color: #e10f7b;
+}
+
+.edit-comment-form {
+  margin-top: 10px;
+}
+
+.edit-comment-input-container {
+  margin-bottom: 10px;
+}
+
+.edit-comment-textarea {
+  width: 100%;
+  height: 3rem;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.edit-comment-submit-button-container {
+  text-align: right;
+}
+
+.edit-comment-submit-button {
+  background-color: #e10f7b;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.edit-comment-submit-button:hover {
+  background-color: #a82468;
+}
+
+.no-comments {
+  font-size: 14px;
+  color: #777;
+}

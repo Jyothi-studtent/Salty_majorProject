@@ -12,6 +12,7 @@ import AssigneeSelector from './AssigneeSelector';
 import ProjectPage from "./ProjectPage";
 import './css/board.css'; // Importing the CSS file
 import BoardsIssueDisplay from './BoardsIssueDisplay';
+import DisplayIssueFilters from './DisplayIssueFilters';
 import { useSelector } from "react-redux";
 const ItemType = 'ITEM';
 
@@ -87,7 +88,7 @@ const DraggableItem = ({ id, IssueName, status, projectid, IssueType, assignee, 
       {showPopup && (
         <div className="popup-overlay" onClick={togglePopup}>
           <div className="popup-content" onClick={(e) => e.stopPropagation()}>
-            <BoardsIssueDisplay data={item} />
+            <DisplayIssueFilters data={item} user={user}/>
           </div>
         </div>
       )}

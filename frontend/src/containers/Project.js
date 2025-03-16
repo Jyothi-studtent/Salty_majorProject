@@ -25,6 +25,15 @@ const Home = ({ user }) => {
         }
       } catch (error) {
         console.error('Error fetching user details:', error);
+        let errorMessage = "Error fetching user details:";
+
+      if (error.response) {
+          errorMessage = error.response.data.error || "Something went wrong.";
+      } else if (error.request) {
+          errorMessage = "No response from server. Check your internet connection.";
+      }
+
+      alert(errorMessage);
       }
     };
 

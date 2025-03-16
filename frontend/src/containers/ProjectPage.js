@@ -25,6 +25,15 @@ const ProjectPage = () => {
       } catch (error) {
         console.error('Error fetching project data:', error);
         setLoading(false);
+        let errorMessage = "Error fetching project data";
+
+      if (error.response) {
+          errorMessage = error.response.data.error || "Something went wrong.";
+      } else if (error.request) {
+          errorMessage = "No response from server. Check your internet connection.";
+      }
+
+      alert(errorMessage);
       }
     };
 

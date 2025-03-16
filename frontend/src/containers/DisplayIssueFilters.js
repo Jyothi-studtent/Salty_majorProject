@@ -3,6 +3,7 @@ import axios from 'axios';
 import { connect } from 'react-redux';
 import './css/DIF.css';
 import CustomDropdown from './CustomDropdown';
+import FileComp from './FileComp';
 
 const DisplayIssueFilters = ({ data, user }) => {
   const [issue, setIssue] = useState(data);
@@ -12,7 +13,6 @@ const DisplayIssueFilters = ({ data, user }) => {
   const [projects, setProjects] = useState([]);
   const [selectedProject, setSelectedProject] = useState(issue.projectId_id);
   const [files, setFiles] = useState([]);
-  const [epics, setEpics] = useState([]);
 
   useEffect(() => {
     setIssue(data);
@@ -36,21 +36,6 @@ const DisplayIssueFilters = ({ data, user }) => {
     if (selectedProject) {
       fetchTeamMembersAndSprints();
     }
-  }, [selectedProject]);
-
-  useEffect(() => {
-    const fetchEpics = async () => {
-      try {
-        if (!selectedProject) return;
-        const response = await axios.get(`http://localhost:8000/djapp/get_epics/?projectid=${selectedProject}`);
-        setEpics(response.data.epics_in_project);
-        console.log(response)
-      } catch (error) {
-        console.error('Error fetching epics:', error);
-      }
-    };
-
-    fetchEpics();
   }, [selectedProject]);
 
   const handleChange = (e) => {
@@ -102,7 +87,7 @@ const DisplayIssueFilters = ({ data, user }) => {
     <div className='display-issue-main-container'>
       {issue ? (
         <div className="display-issue-card">
-          <h1 className="display-issue-title">{issue.IssueName ||issue.EpicName || '----'}</h1>
+          <h1 className="display-issue-title">{issue.IssueName || issue.EpicName || '----'}</h1>
           {/* <p>
             <strong>Assigned by:</strong> {issue.assigned_by || '----'}
           </p> */}
@@ -155,23 +140,6 @@ const DisplayIssueFilters = ({ data, user }) => {
             )}
           </p>
           <p>
-            <strong>Epic:</strong>
-            {isEditing ? (
-              <div>
-                <select value={issue.assigned_epic_id} className="display-issue-input" name="assigned_epic" onChange={handleChange}>
-                  <option value=''>Select...</option>
-                  {epics.map((epic) => (
-                    <option key={epic.Epic_Id} value={epic.Epic_Id}>
-                      {epic.EpicName}
-                    </option>
-                  ))}
-                </select>
-              </div>
-            ) : (
-              issue.assigned_epic || '----'
-            )}
-          </p>
-          <p>
             <strong>Sprint:</strong>
             {isEditing ? (
               <select className="display-issue-select" name="sprint_id" value={issue.sprint_id} onChange={handleChange}>
@@ -206,19 +174,22 @@ const DisplayIssueFilters = ({ data, user }) => {
           <p>
             <strong>Story Points:</strong>
             {isEditing ? (
-              <div className="display-issue-slider-container">
-                <input
-                  type="range"
-                  min="1"
-                  max="3"
-                  name="StoryPoint"
-                  value={issue.StoryPoint}
-                  onChange={handleChange}
-                  className="display-issue-slider"
-                />
-              </div>
+              <select
+                className="display-issue-select"
+                name="storyPoint"
+                value={issue.storyPoint || ''}
+                onChange={handleChange}
+              >
+                <option value="">Select...</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="5">5</option>
+                <option value="8">8</option>
+                <option value="13">13</option>
+              </select>
             ) : (
-              issue.StoryPoint || '----'
+              issue.storyPoint || '----'
             )}
           </p>
           <p>
@@ -237,7 +208,11 @@ const DisplayIssueFilters = ({ data, user }) => {
             )}
           </p>
           <p>
-            <strong>Files:</strong>
+            <h3>Files:</h3>
+            {console.log(issue.id)}
+            <FileComp issueId={issue.id} issue_id={issue.issue_id} isEditing={isEditing} />
+            {console.log(issue.id)}
+            {/* <strong>Files:</strong>
             {isEditing ? (
               <input className="display-issue-file-input" type="file" name="file_field" onChange={handleChange} multiple />
             ) : (
@@ -248,7 +223,7 @@ const DisplayIssueFilters = ({ data, user }) => {
               ) : (
                 <span>----</span>
               )
-            )}
+            )} */}
           </p>
           {isEditing ? (
             <button className="display-issue-button" onClick={handleSave}>Save</button>

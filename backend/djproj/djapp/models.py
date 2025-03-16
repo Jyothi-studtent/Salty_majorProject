@@ -2,8 +2,6 @@ from django.db import models
 from django.contrib.auth.models import AbstractBaseUser,PermissionsMixin,BaseUserManager
 import random
 import uuid
-import string
-
 
 class UserAccountManager(BaseUserManager):
     def create_user(self, email, password=None, **extra_fields):
@@ -76,7 +74,6 @@ class UserAccount(AbstractBaseUser, PermissionsMixin):
             "background_color": self.get_random_color(),
             "initial": email[0].upper() if email else ''
         }
-
     def save(self, *args, **kwargs):
         if not self.pk:  # Check if the instance is being created
             placeholder = self.generate_placeholder_picture(self.email)
@@ -140,24 +137,10 @@ class Sprint(models.Model):
     status=models.CharField( max_length=20, default="start")
     project = models.ForeignKey(Project, on_delete=models.SET_NULL, null=True, blank=True)
     
-class Epic(models.Model):
-    EpicName = models.CharField( max_length=20, default=None)
-    projectId = models.ForeignKey(Project, on_delete=models.SET_NULL, null=True, blank=True,default="null")
-    Epic_id = models.UUIDField(primary_key=True,default=uuid.uuid4, editable=False, unique=True)
-    start_date = models.DateField()
-    end_date = models.DateField(default='')
-    status = models.CharField( max_length=20, default=None)
-    assignee = models.CharField( max_length=80, default=None)
-    assigned_by = models.CharField( max_length=80, default=None)
-    description = models.TextField(max_length=300,default="")
-    file_field = models.FileField(upload_to='uploads/', default='default_file.txt')
-    StoryPoint = models.IntegerField(default=1)
-    Priority = models.CharField(max_length=30,default="")
 
-    
 
 class issue(models.Model):
-    IssueName = models.CharField(max_length=30,default="",unique=True)
+    IssueName = models.CharField(max_length=30,default="",unique=False)
     issue_id = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
     sprint = models.ForeignKey(Sprint, on_delete=models.SET_NULL, null=True, blank=True,default="null")
     projectId = models.ForeignKey(Project, on_delete=models.SET_NULL, null=True, blank=True,default="null")
@@ -167,9 +150,13 @@ class issue(models.Model):
     assigned_by=models.CharField(max_length=30,default="")
     description=models.TextField(max_length=30,default="")
     file_field = models.FileField(upload_to='uploads/', default='default_file.txt')
-    assigned_epic=models.ForeignKey(Epic, on_delete=models.SET_NULL, null=True, blank=True,default="")
+    
     StoryPoint = models.IntegerField(default=1)
     Priority = models.CharField(max_length=30,default="")
+    class Meta:
+        unique_together = ("projectId", "IssueName")
+    def __str__(self):
+        return f"{self.IssueName} ({self.projectId})"
 
 from django.utils import timezone
 class Comments(models.Model):
@@ -182,5 +169,10 @@ class Comments(models.Model):
     CommentBody = models.TextField(max_length=300, default='')
 
 class UploadedFile(models.Model):
-    file = models.FileField(upload_to='uploads/')
-    uploaded_at = models.DateTimeField(auto_now_add=True)
+    id = id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    file = models.FileField(upload_to='uploads/')  
+    uploaded_at = models.DateTimeField(auto_now_add=True)  
+    issue = models.ForeignKey(issue, on_delete=models.CASCADE,default="")  # Assuming Issue is your related model
+
+    def __str__(self):
+        return self.file.name

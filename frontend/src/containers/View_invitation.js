@@ -14,6 +14,15 @@ const View_invitation = () => {
                 setInvitation(response.data);
             } catch (error) {
                 console.error('Error fetching invitation:', error);
+                let errorMessage = "Error fetching invitation:";
+
+      if (error.response) {
+          errorMessage = error.response.data.error || "Something went wrong.";
+      } else if (error.request) {
+          errorMessage = "No response from server. Check your internet connection.";
+      }
+
+      alert(errorMessage);
             }
         };
         fetchInvitation();
@@ -34,6 +43,15 @@ const View_invitation = () => {
             navigate('/');
         } catch (error) {
             console.error('Error declining invitation:', error);
+            let errorMessage = "Error declining invitation:";
+
+      if (error.response) {
+          errorMessage = error.response.data.error || "Something went wrong.";
+      } else if (error.request) {
+          errorMessage = "No response from server. Check your internet connection.";
+      }
+
+      alert(errorMessage);
         }
     };
 

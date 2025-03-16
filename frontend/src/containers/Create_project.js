@@ -35,6 +35,15 @@ const Project = ({ isAuthenticated, user, createProject, project }) => {
             setShowForm(false);
         } catch (error) {
             console.error('Error creating project:', error);
+            let errorMessage = "rror creating project:";
+
+      if (error.response) {
+          errorMessage = error.response.data.error || "Something went wrong.";
+      } else if (error.request) {
+          errorMessage = "No response from server. Check your internet connection.";
+      }
+
+      alert(errorMessage);
         }
     };
 

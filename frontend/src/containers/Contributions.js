@@ -6,6 +6,7 @@ import { Pie } from 'react-chartjs-2';
 import './css/Contribution.css';
 import Sidebar from "../components/Sidebar";
 import ProjectPage from './ProjectPage';
+import { useNavigate,useParams } from 'react-router-dom';
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
@@ -14,15 +15,24 @@ function Contributions({ user }) {
     const [selectedProject, setSelectedProject] = useState('');
     const [doneData, setDoneData] = useState([]);
     const [assignedData, setAssignedData] = useState([]);
-
+const {group_id} = useParams();
     useEffect(() => {
         const fetchProjects = async () => {
             if (user && user.email) {
                 try {
-                    const response = await axios.get(`http://localhost:8000/djapp/project_list/?email=${user.email}`);
+                    const response = await axios.get(`http://localhost:8000/djapp/project_list/?email=${user.email}&group_id=${group_id}`);
                     setProjects(response.data || []);
                 } catch (error) {
                     console.error('Error fetching projects:', error);
+                    let errorMessage = "Error fetching projects:";
+
+      if (error.response) {
+          errorMessage = error.response.data.error || "Something went wrong.";
+      } else if (error.request) {
+          errorMessage = "No response from server. Check your internet connection.";
+      }
+
+      alert(errorMessage);
                 }
             }
         };
@@ -55,6 +65,15 @@ function Contributions({ user }) {
                 console.error('Error fetching issue statistics:', error);
                 setDoneData([]);
                 setAssignedData([]);
+                let errorMessage = "Error fetching issue statistics:";
+
+      if (error.response) {
+          errorMessage = error.response.data.error || "Something went wrong.";
+      } else if (error.request) {
+          errorMessage = "No response from server. Check your internet connection.";
+      }
+
+      alert(errorMessage);
             }
         };
 

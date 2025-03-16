@@ -5,6 +5,7 @@ import Scroll from '../components/Scroll';
 import { connect } from 'react-redux';
 import { FaAngleDoubleUp, FaAngleUp, FaAngleDown } from "react-icons/fa";
 import { MdDensityMedium } from "react-icons/md";
+import FileComp from './FileComp';
 
 const IssueForm = ({ onClose, user }) => {
   const [issueType, setIssueType] = useState('');
@@ -13,7 +14,6 @@ const IssueForm = ({ onClose, user }) => {
   const [summary, setSummary] = useState('');
   const [assignee, setAssignee] = useState('');
   const [sprint, setSprint] = useState('');
-  const [epic, setEpic] = useState('');
   const [attachment, setAttachment] = useState(null);
   const [startDate, setStartDate] = useState('');
   const [dueDate, setDueDate] = useState('');
@@ -21,65 +21,43 @@ const IssueForm = ({ onClose, user }) => {
   const [sprintOptions, setSprintOptions] = useState([]);
   const [projects, setProjects] = useState([]);
   const [selectedProject, setSelectedProject] = useState('');
-  const [epicName, setEpicName] = useState('');
-  const [assignedby, setAssignedby] = useState(user.email);
-  const [epics, setEpics] = useState([]);
   const [storyPoint, setStoryPoint] = useState('');
   const [priority, setPriority] = useState('');
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-        const formData = new FormData();
+      const formData = new FormData();
+      formData.append('IssueType', issueType);
+      formData.append('IssueName', issueName);
+      formData.append('Sprint', sprint);
+      formData.append('Status', status);
+      formData.append('Assignee', assignee);
+      formData.append('Assigned_by', user.email);
+      formData.append('Description', summary);
+      formData.append('ProjectId', selectedProject);
+      formData.append('StoryPoint', storyPoint);
+      formData.append('Priority', priority);
 
-        // Append form data
-        formData.append('IssueType', issueType);
-        formData.append('IssueName', issueName);
-        formData.append('Sprint', sprint);
-        formData.append('Status', status);
-        formData.append('Assignee', assignee);
-        formData.append('Assigned_by', user.email);
-        formData.append('Description', summary);
-        formData.append('ProjectId', selectedProject);
-        formData.append('StoryPoint', storyPoint);
-        formData.append('Priority', priority);
+      if (attachment) {
+        formData.append('Attachment', attachment);
+      }
 
-        // Append file only if it's not null
-        if (attachment) {
-            formData.append('Attachment', attachment);
-        }
+      await axios.post('http://localhost:8000/djapp/create_issue/', formData, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      });
 
-        if (issueType !== "Epic") {
-          console.log(formData, "getting tired");
-            await axios.post('http://localhost:8000/djapp/create_issue/', formData, {
-                headers: {
-                    'Content-Type': 'multipart/form-data',
-                },
-            });
-           
-        } else {
-            formData.append('StartDate', new Date(startDate).toISOString().split('T')[0]);
-            formData.append('DueDate', new Date(dueDate).toISOString().split('T')[0]);
-            formData.append('epicName', epicName);
-
-            await axios.post('http://localhost:8000/djapp/create_epic/', formData, {
-                headers: {
-                    'Content-Type': 'multipart/form-data',
-                },
-            });
-
-        }
-
-        onClose();
+      onClose();
     } catch (error) {
-        console.error('Error creating issue:', error);
+      console.error('Error creating issue:', error);
     }
-};
+  };
 
   useEffect(() => {
     const fetchProjects = async () => {
       try {
-        const response = await axios.get(`http://localhost:8000/djapp/project_list/?email=${user.email}`);
+        const response = await axios.get(`http://localhost:8000/djapp/list_projects_user_is_part_of/?email=${user.email}`);
+        console.log("Fetched Projects: ", response.data); // Debugging log
         setProjects(response.data || []);
       } catch (error) {
         console.error('Error fetching projects:', error);
@@ -106,27 +84,12 @@ const IssueForm = ({ onClose, user }) => {
     fetchTeamMembersAndSprints();
   }, [selectedProject]);
 
-  useEffect(() => {
-    const fetchEpics = async () => {
-      try {
-        if (!selectedProject) return;
-        const response = await axios.get(`http://localhost:8000/djapp/get_epics/?projectid=${selectedProject}`);
-        setEpics(response.data.epics_in_project);
-      } catch (error) {
-        console.error('Error fetching epics:', error);
-      }
-    };
-
-    fetchEpics();
-  }, [selectedProject]);
-
   const handleStoryPointChange = (e) => {
     setStoryPoint(e.target.value);
   };
 
   const handleAttachmentChange = (e) => {
     setAttachment(e.target.files[0]);
-    console.log(e.target.files[0])
   };
 
   return (
@@ -136,11 +99,15 @@ const IssueForm = ({ onClose, user }) => {
           <label>Project:</label>
           <select value={selectedProject} onChange={(e) => setSelectedProject(e.target.value)}>
             <option value="">Select...</option>
-            {projects.map((project) => (
-              <option key={project.projectid} value={project.projectid}>
-                {project.projectname}
-              </option>
-            ))}
+            {projects.length > 0 ? (
+              projects.map((project) => (
+                <option key={project.projectid} value={project.projectid}>
+                  {project.projectname}
+                </option>
+              ))
+            ) : (
+              <option value="" disabled>Loading...</option>
+            )}
           </select>
         </div>
 
@@ -151,48 +118,48 @@ const IssueForm = ({ onClose, user }) => {
             <option value="Story">Story</option>
             <option value="Task">Task</option>
             <option value="Bug">Bug</option>
-            <option value="Epic">Epic</option>
           </select>
         </div>
-        {issueType === "Epic" ? (
-          <div>
-            <label>Epic Name:</label>
-            <input
-              type="text"
-              value={epicName}
-              required
-              onChange={(e) => setEpicName(e.target.value)}
-            />
-          </div>
-        ) : (
-          <div>
-            <label>Issue Name:</label>
-            <input
-              type="text"
-              required
-              value={issueName}
-              onChange={(e) => setIssueName(e.target.value)}
-            />
-          </div>
-        )}
+
         <div>
-          <label>Summary:</label>
-          <textarea
-            value={summary}
-            onChange={(e) => setSummary(e.target.value)}
+          <label>Issue Name:</label>
+          <input
+            type="text"
+            required
+            value={issueName}
+            onChange={(e) => setIssueName(e.target.value)}
           />
         </div>
+
+        <div>
+          <label>Summary:</label>
+          <textarea value={summary} onChange={(e) => setSummary(e.target.value)} />
+        </div>
+        <div>
+          <label>Story Points:</label>
+          <select value={storyPoint} onChange={handleStoryPointChange}>
+            <option value="">Select...</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="5">5</option>
+            <option value="8">8</option>
+            <option value="13">13</option>
+          </select>
+        </div>
+
         <div>
           <label>Priority:</label>
           <select value={priority} onChange={(e) => setPriority(e.target.value)}>
             <option value="">Select...</option>
-            <option value="Highest"><FaAngleDoubleUp />Highest</option>
-            <option value="High"><FaAngleUp />High</option>
-            <option value="Medium"><MdDensityMedium />Medium</option>
-            <option value="Low"><FaAngleDown />Low</option>
-            <option value="Lowest"><FaAngleDown />Lowest</option>
+            <option value="Highest">Highest</option>
+            <option value="High">High</option>
+            <option value="Medium">Medium</option>
+            <option value="Low">Low</option>
+            <option value="Lowest">Lowest</option>
           </select>
         </div>
+
         <div>
           <label>Status:</label>
           <select value={status} onChange={(e) => setStatus(e.target.value)}>
@@ -202,99 +169,23 @@ const IssueForm = ({ onClose, user }) => {
             <option value="Done">Done</option>
           </select>
         </div>
-        <div className="story-point-container">
-          <label>Story Points:</label>
-          <div className="story-point-slider">
-            <input
-              type="range"
-              min="1"
-              max="3"
-              value={storyPoint}
-              onChange={handleStoryPointChange}
-              style={{
-                background: `linear-gradient(to right, blue, red)`,
-                width: '100%',
-              }}
-            />
-            <ul className="story-point-labels">
-              <li>1</li>
-              <li>2</li>
-              <li>3</li>
-            </ul>
-          </div>
-        </div>
-
-        {issueType !== "Epic" && (
-          <div>
-            <label>Epic:</label>
-            <select value={epic} onChange={(e) => setEpic(e.target.value)}>
-
-              <option value="">Select...</option>
-              {epics.map((epic) => (
-                <option key={epic.Epic_Id} value={epic.Epic_Id}>
-                  {epic.EpicName}
-                </option>
-              ))}
-            </select>
-          </div>
-        )}
-        
         <div>
           <label>Assignee:</label>
           <select value={assignee} onChange={(e) => setAssignee(e.target.value)}>
             <option value="">Select</option>
-            {assigneeOptions.length > 0 ? (
-              assigneeOptions.map(user => (
-                <option key={user.email} value={user.email}>
-                  {`${user.first_name} ${user.last_name}`}
-                </option>
-              ))
-            ) : (
-              <option value="" disabled>Loading...</option>
-            )}
+            {assigneeOptions.map(user => (
+              <option key={user.email} value={user.email}>
+                {`${user.first_name} ${user.last_name}`}
+              </option>
+            ))}
           </select>
         </div>
-        {issueType !== "Epic" && (
-          <div>
-            <label>Sprint:</label>
-            <select value={sprint} onChange={(e) => setSprint(e.target.value)}>
-              <option value="">Select...</option>
-              {sprintOptions.length > 0 ? (
-                sprintOptions.map(sprint => (
-                  <option key={sprint.sprint} value={sprint.sprint}>
-                    {sprint.sprint}
-                  </option>
-                ))
-              ) : (
-                <option value="" disabled>Loading...</option>
-              )}
-            </select>
-          </div>
-        )}
-        {issueType === "Epic" && (
-          <>
-            <div>
-              <label>Start Date:</label>
-              <input
-                type="datetime-local"
-                value={startDate}
-                onChange={(e) => setStartDate(e.target.value)}
-              />
-            </div>
-            <div>
-              <label>Due Date:</label>
-              <input
-                type="datetime-local"
-                value={dueDate}
-                onChange={(e) => setDueDate(e.target.value)}
-              />
-            </div>
-          </>
-        )}
-        <div>
-          <label>Attachment:</label>
-          <input type="file" onChange={handleAttachmentChange} />
-        </div>
+
+        {/* <div>
+          <label>File:</label>
+          <FileComp issueId={issue.id} issue_id={issue.issue_id} isEditing={isEditing} />
+        </div> */}
+
         <div>
           <button type="submit">Create</button>
           <button type="button" onClick={onClose}>Cancel</button>
@@ -309,4 +200,3 @@ const mapStateToProps = state => ({
 });
 
 export default connect(mapStateToProps)(IssueForm);
-

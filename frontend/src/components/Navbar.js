@@ -15,24 +15,34 @@ const Navbar = ({ logout, isAuthenticated, user }) => {
     const navigate = useNavigate();
     const { group_id, projectid } = useParams();
     const [formOpen, setFormOpen] = useState(false);
+  
 
     useEffect(() => {
-        if (user && group_id) {  // ✅ Ensure group_id is present
+        if (user) {
             const fetchProjects = async () => {
                 try {
-                    const response = await axios.get('http://localhost:8000/djapp/project_list/', {
-                        params: { email: user.email, group_id: group_id }  // ✅ Add group_id
-                    });
+                    const response = await axios.get(`http://localhost:8000/djapp/project_list/?email=${user.email}&group_id=${group_id}`);
+                    // const response = await axios.get('http://localhost:8000/djapp/project_list/', {
+                    //     params: { email: user.email, group_id: group_id  }
+                    // });
                     setProjects(response.data);
                 } catch (error) {
                     console.error('Error fetching projects:', error);
+                    let errorMessage = "There was an error fetching the data!";
+
+        if (error.response) {
+            errorMessage = error.response.data.error || "Something went wrong.";
+        } else if (error.request) {
+            errorMessage = "No response from server. Check your internet connection.";
+        }
+  
+        alert(errorMessage);
                 }
             };
-    
+
             fetchProjects();
         }
-    }, [user, group_id]);  // ✅ Add group_id as dependency
-    
+    }, [user]);
 
     useEffect(() => {
         const handleClickOutside = (event) => {

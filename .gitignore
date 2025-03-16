@@ -1,4 +1,24 @@
-node_modules/
-db.sqlite3/
-venv
+# Ignore SQLite database
+backend/djproj/*.sqlite3
+backend/djproj/*.db
+backend/venv
+# Ignore Django migrations
+backend/djproj/**/migrations/
+!backend/djproj/**/migrations/__init__.py  # Keeps __init__.py
+
+# Ignore frontend build folder
+frontend/build/
+
+# Ignore environment files
 .env
+backend/.env
+frontend/.env
+
+# Ignore Python compiled files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Ignore node_modules
+frontend/node_modules/

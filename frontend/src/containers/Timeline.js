@@ -57,6 +57,15 @@ const Timeline = ({ projectId }) => {
         })
         .catch(error => {
           console.error('Error exporting timeline:', error);
+          let errorMessage = "Error exporting timeline:";
+
+      if (error.response) {
+          errorMessage = error.response.data.error || "Something went wrong.";
+      } else if (error.request) {
+          errorMessage = "No response from server. Check your internet connection.";
+      }
+
+      alert(errorMessage);
         });
     }
   };
@@ -85,6 +94,15 @@ console.log(projectId,"timeline")
       })
       .catch(error => {
         console.error('Error fetching sprint data:', error);
+        let errorMessage = "Error fetching sprint data:";
+
+      if (error.response) {
+          errorMessage = error.response.data.error || "Something went wrong.";
+      } else if (error.request) {
+          errorMessage = "No response from server. Check your internet connection.";
+      }
+
+      alert(errorMessage);
       });
 
     // Update container dimensions

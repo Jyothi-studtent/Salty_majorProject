@@ -297,6 +297,16 @@ const token = useSelector((state) => state.auth.access);
         setAssigneeOptions(teamMembersResponse.data.team_members);
       } catch (error) {
         console.error('Error fetching team members and sprints:', error);
+        let errorMessage = "Failed to load team members. Please try again later.";
+
+            if (error.response) {
+                errorMessage = error.response.data.error || "Something went wrong.";
+            } else if (error.request) {
+                errorMessage = "No response from server. Check your connection.";
+            }
+
+            alert(errorMessage);  // Show error in an alert (replace with better UI if needed)
+       
       }
     };
     fetchTeamMembers();

@@ -3,6 +3,8 @@ import { Link, useNavigate, useLocation, Navigate } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { signup } from '../actions/auth';
 import axios from 'axios';
+import { FaEye, FaEyeSlash } from "react-icons/fa";
+
 import './css/Signup.css';  // Import the CSS file
 
 const Signup = ({ signup, isAuthenticated }) => {
@@ -23,10 +25,23 @@ const Signup = ({ signup, isAuthenticated }) => {
     const { first_name, last_name, email, password, re_password } = formData;
 
     const onChange = e => {setFormData({ ...formData, [e.target.name]: e.target.value }); console.log(formData,"from 1")}
-
+    const [showPassword, setShowPassword] = useState(false);
+    const [showRePassword, setShowRePassword] = useState(false);
+    const togglePasswordVisibility = () => {
+        console.log("visiiii",showPassword)
+        setShowPassword(prevState => !prevState)
+        console.log("visiiii",showPassword)
+    };
+    
+    const toggleRePasswordVisibility = () => {
+        console.log("visiiii",showRePassword)
+        setShowRePassword(prevState => !prevState);
+        console.log("visiiii",showRePassword)
+    };
+        
     const onSubmit = async e => {
         e.preventDefault();
-
+        setMessage({ type: 'info', text: 'Please wait, it may take a few seconds...' });
         if (password === re_password) {
             const error = await signup(first_name, last_name, email, password, re_password);
             if (error) {
@@ -71,7 +86,7 @@ const Signup = ({ signup, isAuthenticated }) => {
         return <Navigate to='/' />;
     }
     if (accountCreated) {
-        navigate(`/login?projectid=${projectId}&message=Please verify your account before logging in`);
+        navigate(`/login?projectid=${projectId}&message=Account created! Please check your email to verify.`);
         return null;
     }
 
@@ -89,29 +104,32 @@ const Signup = ({ signup, isAuthenticated }) => {
                     <div className='signup-form-group'>
                         <input
                             className='signup-form-control'
-                            type='text'
+                            type= "text"
                             placeholder='First Name*'
                             name='first_name'
                             value={first_name}
                             onChange={e => onChange(e)}
                             required
                         />
+                       
+
                     </div>
                     <div className='signup-form-group'>
                         <input
                             className='signup-form-control'
-                            type='text'
+                            type="text"
                             placeholder='Last Name*'
                             name='last_name'
                             value={last_name}
                             onChange={e => onChange(e)}
                             required
                         />
+                    
                     </div>
                     <div className='signup-form-group'>
                         <input
                             className='signup-form-control'
-                            type='email'
+                            type='text'
                             placeholder='Email*'
                             name='email'
                             value={email}
@@ -122,7 +140,7 @@ const Signup = ({ signup, isAuthenticated }) => {
                     <div className='signup-form-group'>
                         <input
                             className='signup-form-control'
-                            type='password'
+                            type={showPassword ? "text" : "password"}
                             placeholder='Password*'
                             name='password'
                             value={password}
@@ -130,11 +148,14 @@ const Signup = ({ signup, isAuthenticated }) => {
                             minLength='6'
                             required
                         />
+                         <button type="button" className="eye-button" onClick={togglePasswordVisibility}>
+    {showRePassword ? <FaEyeSlash /> : <FaEye />}
+</button>
                     </div>
                     <div className='signup-form-group'>
                         <input
                             className='signup-form-control'
-                            type='password'
+                            type={showRePassword ? "text" : "password"}
                             placeholder='Confirm Password*'
                             name='re_password'
                             value={re_password}
@@ -142,13 +163,23 @@ const Signup = ({ signup, isAuthenticated }) => {
                             minLength='6'
                             required
                         />
+                         <button type="button" className="eye-button" onClick={toggleRePasswordVisibility}>
+    {showRePassword ? <FaEyeSlash /> : <FaEye />}
+</button>
+
                     </div>
                     <button className='signup-btn signup-btn-primary' type='submit'>Register</button>
                 </form>
                 <p className='signup-text mt-3'>
                     Already have an account? <Link to='/login' className='signup-link'>Sign In</Link>
                 </p>
+                {/* ⚠️ Password warning message */}
+        <div style={{ color: "red", fontSize: "14px", marginTop: "10px", textAlign: "center" }}>
+            ⚠️   Password should contain at least one capital letter, one number, and one special character.
+
+        </div>
             </div>
+           
         </div>
     );
 };

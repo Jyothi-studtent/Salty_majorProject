@@ -11,8 +11,10 @@ import axios from 'axios';
 import { FaPencilAlt } from 'react-icons/fa';
 import { useDrop } from 'react-dnd';
 import { useSelector } from "react-redux";
+
 const Sprint = ({ sprint, fetchData, onSprintDelete, setissueDragged = null, onissueTypeChange,toggleTrigger }) => {
   const { projectid } = useParams();
+  const {group_id} = useParams();
   const [action,setActions]=useState("");
   const [issues, setIssues] = useState([]);
   const [issueStatusChanged, setIssueStatusChanged] = useState(false);
@@ -39,6 +41,17 @@ const Sprint = ({ sprint, fetchData, onSprintDelete, setissueDragged = null, oni
       setIssueStatusChanged(false);
     } catch (error) {
       console.error("Error fetching data:", error);
+      let errorMessage = "Failed to load team members. Please try again later.";
+
+            if (error.response) {
+                errorMessage = error.response.data.error || "Something went wrong.";
+            } else if (error.request) {
+                errorMessage = "No response from server. Check your connection.";
+            }
+
+            alert(errorMessage);  // Show error in an alert (replace with better UI if needed)
+        
+      
     }
   };
 
@@ -65,7 +78,7 @@ const Sprint = ({ sprint, fetchData, onSprintDelete, setissueDragged = null, oni
         }
       });
       
-      navigate(`/project/${projectid}/boards?sprintName=${encodeURIComponent(sprint.sprint)}`);
+      navigate(`/group/${group_id}/project/${projectid}/boards?sprintName=${encodeURIComponent(sprint.sprint)}`);
     } else {
       const allIssuesDone = issues.every(issue => issue.status === 'Done');
       if (allIssuesDone) {

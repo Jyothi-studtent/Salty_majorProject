@@ -14,6 +14,15 @@ const Colsprint = ({ projectId }) => {
       })
       .catch(error => {
         console.error('Error fetching data:', error);
+        let errorMessage = "Failed to load sprints. Please try again later.";
+
+            if (error.response) {
+                errorMessage = error.response.data.error || "Something went wrong.";
+            } else if (error.request) {
+                errorMessage = "No response from server. Check your internet connection.";
+            }
+
+            alert(errorMessage);
       });
   }, [projectId]);
 

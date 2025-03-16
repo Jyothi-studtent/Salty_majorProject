@@ -110,6 +110,15 @@ const Timemaxi = ({projectId}) => {
         })
         .catch(error => {
           console.error('Error exporting timeline:', error);
+          let errorMessage = "Error exporting timeline:";
+
+      if (error.response) {
+          errorMessage = error.response.data.error || "Something went wrong.";
+      } else if (error.request) {
+          errorMessage = "No response from server. Check your internet connection.";
+      }
+
+      alert(errorMessage);
         });
     }
   };
@@ -138,6 +147,15 @@ const Timemaxi = ({projectId}) => {
       })
       .catch(error => {
         console.error('Error fetching sprint data:', error);
+        let errorMessage = "EError fetching sprint data:";
+
+      if (error.response) {
+          errorMessage = error.response.data.error || "Something went wrong.";
+      } else if (error.request) {
+          errorMessage = "No response from server. Check your internet connection.";
+      }
+
+      alert(errorMessage);
       });
 
     d3.select(containerRef.current)

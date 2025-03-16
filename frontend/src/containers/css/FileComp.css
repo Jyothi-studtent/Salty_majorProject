@@ -1,0 +1,87 @@
+.file-comp-container {
+    max-width: 450px; /* Reduced width */
+    margin: 15px 0; /* Aligns left */
+    padding: 10px;
+    font-size: 0.85rem; /* Reduced font size */
+}
+
+h3 {
+    font-size: 1rem; /* Smaller heading */
+    margin-bottom: 8px;
+}
+
+.file-list {
+    list-style: none;
+    padding: 0;
+    font-size: 0.8rem; /* Smaller file list text */
+}
+
+.file-list li {
+    padding: 6px 10px; /* Reduced padding */
+    border-bottom: 1px solid #ddd; /* Light separator */
+    transition: transform 0.2s ease-in-out;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.file-list li:hover {
+    transform: scale(1.01);
+}
+
+.file-list a {
+    text-decoration: none;
+    color: #007bff;
+    font-weight: 500;
+    font-size: 0.85rem; /* Smaller font size */
+}
+
+.file-list a:hover {
+    text-decoration: underline;
+    color: #0056b3;
+}
+
+.uploaded-time {
+    font-size: 0.75rem; /* Smaller timestamp */
+    color: #555;
+}
+
+.no-files {
+    color: #777;
+    font-size: 0.8rem; /* Reduced size */
+}
+
+.file-upload-container {
+    margin-top: 8px;
+}
+
+.file-upload-container input[type="file"] {
+    display: block;
+    margin: 6px 0;
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.8rem; /* Reduced input font size */
+}
+
+.file-upload-container button {
+    background-color: #28a745;
+    color: white;
+    padding: 6px 10px; /* Reduced padding */
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.85rem; /* Smaller button text */
+    transition: background 0.2s ease-in-out;
+}
+
+.file-upload-container button:hover {
+    background-color: #218838;
+}
+
+.message {
+    margin-top: 6px;
+    font-size: 0.8rem; /* Smaller message text */
+    color: #333;
+}

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import "./css/FileComp.css"; // Import the CSS file
 
 const FileComp = ({ issueId, isEditing, issue_id }) => {
     const [files, setFiles] = useState([]);
@@ -23,7 +24,6 @@ const FileComp = ({ issueId, isEditing, issue_id }) => {
 
     const handleFileChange = (event) => {
         const selectedFiles = Array.from(event.target.files);
-        console.log("Selected files:", selectedFiles);
         setNewFiles((prevFiles) => [...prevFiles, ...selectedFiles]);
     };
 
@@ -35,13 +35,7 @@ const FileComp = ({ issueId, isEditing, issue_id }) => {
 
         const formData = new FormData();
         newFiles.forEach(file => formData.append("files", file)); // Ensure backend expects 'files' key
-        console.log(issue_id, '###########################')
         formData.append("issue_id", issue_id);
-
-        // Debug: Log FormData contents
-        for (let pair of formData.entries()) {
-            console.log("FormData:", pair[0], pair[1]);
-        }
 
         try {
             await axios.post("http://localhost:8000/djapp/upload_file/", formData, {
@@ -58,28 +52,32 @@ const FileComp = ({ issueId, isEditing, issue_id }) => {
     };
 
     return (
-        <div>
+        <div className="file-comp-container">
+            <h4>Uploaded Files</h4>
+
             {files.length > 0 ? (
-                <ul>
+                <ul className="file-list">
                     {files.map((file) => (
                         <li key={file.id}>
                             <a href={`http://localhost:8000${file.file_url}`} target="_blank" rel="noopener noreferrer">
                                 {file.file_name}
                             </a>{" "}
-                            (Uploaded: {new Date(file.uploaded_at).toLocaleString()})
+                            <span className="uploaded-time">
+                                (Uploaded: {new Date(file.uploaded_at).toLocaleString()})
+                            </span>
                         </li>
                     ))}
                 </ul>
             ) : (
-                <p>No files uploaded for this issue.</p>
+                <p className="no-files">No files uploaded for this issue.</p>
             )}
 
             {isEditing && (
-                <>
+                <div className="file-upload-container">
                     <input type="file" multiple onChange={handleFileChange} />
                     <button onClick={handleUpload}>Upload</button>
-                    <p>{message}</p>
-                </>
+                    <p className="message">{message}</p>
+                </div>
             )}
         </div>
     );

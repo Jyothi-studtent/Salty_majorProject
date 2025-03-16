@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import '.css/FileList.css';
 
 const FileList = () => {
     const [files, setFiles] = useState([]);
@@ -18,7 +19,7 @@ const FileList = () => {
     }, []);
 
     return (
-        <div>
+        <div className="file-list-container">
             <h2>Uploaded Files</h2>
             {files.length === 0 ? <p>No files uploaded yet.</p> : (
                 <ul>

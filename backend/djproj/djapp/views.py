@@ -1042,14 +1042,6 @@ def upload_file(request):
 
     return JsonResponse({'message': 'Files uploaded successfully!', 'files': uploaded_files})
 
-
-
-
-
-
-
-  
-
 from django.http import JsonResponse
 from django.contrib.auth import get_user_model
 from .models import GroupMember, Group

@@ -10,6 +10,7 @@ import Backlog from './Backlog';
 import axios from 'axios';
 import { FaPencilAlt } from 'react-icons/fa';
 import { useDrop } from 'react-dnd';
+import Modal from './modal';
 import { useSelector } from "react-redux";
 
 const Sprint = ({ sprint, fetchData, onSprintDelete, setissueDragged = null, onissueTypeChange,toggleTrigger }) => {
@@ -25,6 +26,7 @@ const Sprint = ({ sprint, fetchData, onSprintDelete, setissueDragged = null, oni
   const [selectedSprintData, setSelectedSprintData] = useState(null);
   const [backlogsListOpen, setBacklogsListOpen] = useState(true);
   const [showSprintForm, setShowSprintForm] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const navigate = useNavigate();
   const token = useSelector((state) => state.auth.access);
   const dropdownRef = useRef(null);
@@ -67,9 +69,18 @@ const Sprint = ({ sprint, fetchData, onSprintDelete, setissueDragged = null, oni
     setActions(action)
     setShowSprintForm(true);
   };
-
+    const [showPopup, setShowPopup] = useState(false);
+  const togglePopup = () => {
+    setIsModalOpen(false);
+  };
   const handleSprintForm = async () => {
     if (buttonType === 'start') {
+      console.log("object",sprint.start_date,)
+      if(sprint.start_date==null && sprint.end_date==null){
+        setIsModalOpen(true);
+
+      }
+       else{
       setActions('start')
       setButtonType('complete');
       const response = await axios.get("http://localhost:8000/djapp/updateSprintStatus/", {
@@ -79,6 +90,7 @@ const Sprint = ({ sprint, fetchData, onSprintDelete, setissueDragged = null, oni
       });
       
       navigate(`/group/${group_id}/project/${projectid}/boards?sprintName=${encodeURIComponent(sprint.sprint)}`);
+    }
     } else {
       const allIssuesDone = issues.every(issue => issue.status === 'Done');
       if (allIssuesDone) {
@@ -93,6 +105,7 @@ const Sprint = ({ sprint, fetchData, onSprintDelete, setissueDragged = null, oni
         alert("Please complete all issues before completing the sprint.");
       }
     }
+  
   };
 
   const receiveFormDataFromChild = (data) => {
@@ -236,6 +249,9 @@ const Sprint = ({ sprint, fetchData, onSprintDelete, setissueDragged = null, oni
         </div>
         {backlogsListOpen && <Backlog issuesList={issues} sprint_name={sprint.sprint} onissueTypeChange={setIssueStatusChanged}  />}
       </div>
+      {isModalOpen && (
+    <Modal onClose={togglePopup} message="Please specify the start and end dates for the sprint before proceeding. " />
+  )}
     </div>
   );
 };

@@ -175,7 +175,7 @@ const Signup = ({ signup, isAuthenticated }) => {
                 </p>
                 {/* ⚠️ Password warning message */}
         <div style={{ color: "red", fontSize: "14px", marginTop: "10px", textAlign: "center" }}>
-            ⚠️   Password should contain at least one capital letter, one number, and one special character.
+            ⚠️   Password should contain at least one capital letter, one number, and one special character and should be more then 6 characters
 
         </div>
             </div>

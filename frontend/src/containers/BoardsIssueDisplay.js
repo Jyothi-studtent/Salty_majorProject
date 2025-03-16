@@ -3,6 +3,7 @@ import axios from 'axios';
 import { connect } from 'react-redux';
 import './css/DIF.css';
 import CustomDropdown from './CustomDropdown';
+import {useParams } from 'react-router-dom';
 import Comment from './Comment';
 
 const DisplayIssueFilters = ({ data, user }) => {
@@ -65,7 +66,7 @@ const DisplayIssueFilters = ({ data, user }) => {
 
 //     fetchEpics();
 //   }, [selectedProject]);
-
+const {group_id} = useParams();
   const handleChange = (e) => {
     const { name, value } = e.target;
     if (name === 'assignee') {
@@ -109,7 +110,7 @@ const DisplayIssueFilters = ({ data, user }) => {
   useEffect(() => {
     const fetchProjects = async () => {
       try {
-        const response = await axios.get(`http://localhost:8000/djapp/project_list/?email=${user.email}`);
+        const response = await axios.get(`http://localhost:8000/djapp/project_list/?email=${user.email}&group_id=${group_id}`);
         setProjects(response.data || []);
       } catch (error) {
         console.error('Error fetching projects:', error);

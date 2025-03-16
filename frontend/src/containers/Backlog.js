@@ -438,15 +438,7 @@ const token = useSelector((state) => state.auth.access);
 
           </>
         )}
-        {/* {dropdownEpics && Epics.length > 0 && (
-          <div className="dropdown-menu">
-            {Epics.map((epic, index) => (
-              <div key={index} className="dropdown-item" onClick={() => handleSelectEpic(epic.EpicName)}>
-                {epic.EpicName}
-              </div>
-            ))}
-          </div>
-        )} */}
+        
       </div>
       </div>
       <div className="right-most"  onClick={(e) => e.stopPropagation()}>

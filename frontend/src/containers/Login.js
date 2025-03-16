@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { clickGroup, login } from '../actions/auth';
 import axios from 'axios';
 import './css/login.css';
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 const Login = ({ login, isAuthenticated }) => {
     const [formData, setFormData] = useState({
@@ -17,12 +18,16 @@ const Login = ({ login, isAuthenticated }) => {
     const [message, setMessage] = useState({ type: null, text: initialMessage || '' });
 
     const { email, password } = formData;
-
+ const [showPassword, setShowPassword] = useState(false);
     const onChange = e => setFormData({ ...formData, [e.target.name]: e.target.value });
-
+    const togglePasswordVisibility = () => {
+        console.log("visiiii",showPassword)
+        setShowPassword(prevState => !prevState)
+        console.log("visiiii",showPassword)
+    };
     const onSubmit = async e => {
         e.preventDefault();
-    
+        setMessage({ type: 'info', text: 'Please wait, it may take a few seconds...' });
         const error = await login(email, password);
     
         if (projectId != null) {
@@ -100,7 +105,7 @@ const Login = ({ login, isAuthenticated }) => {
                     <div className='login-form-group'>
                         <input
                             className='login-form-control'
-                            type='password'
+                            type={showPassword ? "text" : "password"}
                             placeholder='Password'
                             name='password'
                             value={password}
@@ -108,6 +113,9 @@ const Login = ({ login, isAuthenticated }) => {
                             minLength='6'
                             required
                         />
+                        <button type="button" className="eye-button-login" onClick={togglePasswordVisibility}>
+                            {showPassword ? <FaEyeSlash /> : <FaEye />}
+                        </button>
                     </div>
                     <p className='login-recovery'>
                         <Link to='/reset_password' className='login-link'>Recovery Password</Link>

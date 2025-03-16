@@ -150,7 +150,6 @@ class issue(models.Model):
     assigned_by=models.CharField(max_length=30,default="")
     description=models.TextField(max_length=30,default="")
     file_field = models.FileField(upload_to='uploads/', default='default_file.txt')
-    
     StoryPoint = models.IntegerField(default=1)
     Priority = models.CharField(max_length=30,default="")
     class Meta:

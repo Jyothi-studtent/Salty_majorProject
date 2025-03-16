@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import './css/DIF.css';
 import CustomDropdown from './CustomDropdown';
 import FileComp from './FileComp';
-
+import {useParams } from 'react-router-dom';
 const DisplayIssueFilters = ({ data, user }) => {
   const [issue, setIssue] = useState(data);
   const [isEditing, setIsEditing] = useState(false);

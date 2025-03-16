@@ -11,10 +11,7 @@ urlpatterns = [
     path('invite_group_members/',invite_group_members, name='invite_group_members'),
     # path('view_invitation/',view_invitation, name='view_invitation'),
     # path('accept_invitation/',accept_invitation, name='accept_invitation'),
-    # path('decline_invitation/',decline_invitation, name='decline_invitation'),
-
-
-   
+    # path('decline_invitation/',decline_invitation, name='decline_invitation'),   
     path('project_list/',project_list, name='project_list'),
     path('group_list/',group_list, name='group_list'),
     path('issues/', ReactViews, name='project-issues'),
@@ -51,6 +48,8 @@ urlpatterns = [
     path('get_assignee/', get_assignee, name='get_assignee'),
     path('update_user_profile/',update_user_profile, name = 'update_user_profile'),
     path('upload/', FileUploadView.as_view(), name='file-upload'),
-    path('update_storypoints/', update_storypoints, name='update_storpoints')
-
+    path('update_storypoints/', update_storypoints, name='update_storpoints'),
+    path('list_projects_user_is_part_of/', list_projects_user_is_part_of, name='list_projects_user_is_part_of'),
+    path('upload_file/', upload_file, name='upload_file'),
+    path('files/', list_files, name='list_files'),
 ]

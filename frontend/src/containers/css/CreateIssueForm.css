@@ -1,84 +1,79 @@
-.create-issue-form {
-  width: 30rem;
-  margin: 20px auto;
-  padding: 1rem;
-  background-color: white;
+/* Overlay to cover the background */
+.issue-form-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+/* Popup container */
+.issue-form-container {
+  background: white;
+  padding: 20px;
   border-radius: 10px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  width: 400px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  position: relative;
+  z-index: 1001;
 }
 
-.create-issue-form label {
+/* Close button */
+.issue-form-close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: transparent;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+/* Form styles */
+.issue-form-create-issue-form {
+  display: flex;
+  flex-direction: column;
+}
+
+.issue-form-create-issue-form label {
   font-weight: bold;
-  margin-bottom: 5px;
-  display: block;
+  margin-top: 10px;
 }
 
-.create-issue-form select,
-.create-issue-form input[type='text'],
-.create-issue-form textarea,
-.create-issue-form input[type='datetime-local'],
-.create-issue-form input[type='file'] {
+.issue-form-create-issue-form input,
+.issue-form-create-issue-form select,
+.issue-form-create-issue-form textarea {
   width: 100%;
   padding: 8px;
-  margin-bottom: 15px;
+  margin-top: 5px;
   border: 1px solid #ccc;
   border-radius: 5px;
-  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
 }
 
-.create-issue-form select:focus,
-.create-issue-form input[type='text']:focus,
-.create-issue-form textarea:focus,
-.create-issue-form input[type='datetime-local']:focus,
-.create-issue-form input[type='file']:focus {
-  outline: none;
-  border-color: #d0136f;
-}
-
-.create-issue-form textarea {
-  resize: vertical;
-}
-
-.create-issue-form button[type='submit'],
-.create-issue-form button[type='button'] {
-  padding: 10px 20px;
-  margin-top: 10px;
-  border: none;
-  border-radius: 5px;
-  background-color: #d0136f;
-  color: white;
-  cursor: pointer;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.create-issue-form button[type='submit']:hover,
-.create-issue-form button[type='button']:hover {
-  background-color: #ff4e99;
-}
-
-.story-point-container {
-  margin-bottom: 15px;
-}
-
-.story-point-slider {
-  position: relative;
-}
-
-.story-point-slider input[type='range'] {
-  width: 100%;
-  margin-bottom: 5px;
-}
-
-.story-point-labels {
+.issue-form-buttons {
   display: flex;
   justify-content: space-between;
-  padding: 0;
-  margin: 0;
-  list-style-type: none;
-  font-weight: bold;
+  margin-top: 20px;
 }
 
-.story-point-labels li {
-  flex: 1;
-  text-align: center;
+.issue-form-buttons button {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.issue-form-buttons button:first-child {
+  background-color: #007bff;
+  color: white;
+}
+
+.issue-form-buttons button:last-child {
+  background-color: #dc3545;
+  color: white;
 }

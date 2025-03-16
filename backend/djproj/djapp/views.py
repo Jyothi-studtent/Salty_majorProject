@@ -1091,6 +1091,93 @@ def update_storypoints(request):
             return JsonResponse({"message": "Invalid JSON format in request body"}, status=400)
     else:
         return JsonResponse({"message": "Only POST requests are allowed"}, status=405)
+    
+
+def list_projects_user_is_part_of(request):
+    if request.method == 'GET':
+        email = request.GET.get('email', None)
+        
+        if not email:
+            return JsonResponse({'error': 'Email parameter is missing'}, status=400)
+        
+        try:
+            user = UserAccount.objects.get(email=email)
+        except UserAccount.DoesNotExist:
+            return JsonResponse({'error': 'User does not exist'}, status=404)
+        
+        if user.is_admin:
+            projects = Project.objects.all()
+        else:
+            projects_lead = Project.objects.filter(teamlead_email=email)
+            projects_member = Project_TeamMember.objects.filter(team_member_email=email).values_list('project', flat=True)
+            projects = projects_lead | Project.objects.filter(pk__in=projects_member)
+        
+        project_data = [
+            {
+                'projectid': project.projectid,
+                'projectname': project.projectname,
+                'teamlead_email': project.teamlead_email,
+                'group_id': project.group.group_id if project.group else None
+            } 
+            for project in projects
+        ]
+        
+        return JsonResponse(project_data, safe=False)
+    else:
+        return JsonResponse({'error': 'Only GET requests are allowed'}, status=405)
+  
+
+
+def list_files(request):
+    issue_id = request.GET.get('issue_id')
+    files = UploadedFile.objects.filter(issue_id=issue_id)
+    file_list = [{'id': file.id, 'file_name': file.file.name, 'file_url': file.file.url, 'uploaded_at': file.uploaded_at} for file in files]
+    
+    return JsonResponse(file_list, safe=False)
+
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+from .models import UploadedFile, issue
+
+@csrf_exempt
+def upload_file(request):
+    print("line1 ")
+    if request.method != 'POST':
+        print("line2 ")
+        return JsonResponse({'error': 'Invalid request method'}, status=405)
+
+    print("line3 ")
+    if 'files' not in request.FILES:
+        return JsonResponse({'error': 'No files uploaded'}, status=400)
+
+    issue_id = request.POST.get('issue_id')
+    print('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@\n', issue_id, "\n@@@@@@@@@@@@@@@@@@@@")
+
+    if not issue_id:
+        return JsonResponse({'error': 'Missing issue_id'}, status=400)
+
+    try:
+        # Correctly get the issue using issue_id, which is UUID
+        fetched_issue = issue.objects.get(issue_id=issue_id)
+        print("????????????????????????????????????????\n", fetched_issue)
+    except issue.DoesNotExist:
+        return JsonResponse({'error': 'Invalid issue ID'}, status=400)
+
+    uploaded_files = []
+    for file in request.FILES.getlist('files'):
+        uploaded_file = UploadedFile.objects.create(file=file, issue=fetched_issue)
+        uploaded_files.append({
+            'file_url': uploaded_file.file.url,  # Ensure MEDIA_URL is set in settings.py
+            'file_name': uploaded_file.file.name,
+            'uploaded_at': uploaded_file.uploaded_at
+        })
+
+    return JsonResponse({'message': 'Files uploaded successfully!', 'files': uploaded_files})
+
+
+
+
+
 
 
   

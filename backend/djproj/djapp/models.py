@@ -2,35 +2,27 @@ from django.db import models
 from django.contrib.auth.models import AbstractBaseUser,PermissionsMixin,BaseUserManager
 import random
 import uuid
-import string
-
 
 class UserAccountManager(BaseUserManager):
     def create_user(self, email, password=None, **extra_fields):
         if not email:
             raise ValueError('Users must have an email address')
-
         email = self.normalize_email(email)
         user = self.model(email=email, **extra_fields)
-
         user.set_password(password)
         user.save()
-
         return user
 
     def create_superuser(self, email, password=None, **extra_fields):
         extra_fields.setdefault('is_staff', True)
         extra_fields.setdefault('is_superuser', True)
         extra_fields.setdefault('is_admin', True)  # Ensure superusers are admins by default
-
         if extra_fields.get('is_staff') is not True:
             raise ValueError('Superuser must have is_staff=True.')
         if extra_fields.get('is_superuser') is not True:
             raise ValueError('Superuser must have is_superuser=True.')
 
         return self.create_user(email, password, **extra_fields)
-
-
 
 class UserAccount(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(max_length=255, unique=True)
@@ -44,29 +36,22 @@ class UserAccount(AbstractBaseUser, PermissionsMixin):
     profile_photo = models.ImageField(upload_to='profile_photos/', blank=True, null=True)
     first_letter = models.CharField(max_length=15, blank=True, null=True)
     color = models.CharField(max_length=15, blank=True, null=True)
-
     objects = UserAccountManager()
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['first_name', 'last_name']
-
     def get_full_name(self):
         return self.first_name
-   
     def get_short_name(self):
         return self.first_name
-   
     def __str__(self):
         return self.email
-
     def get_random_color(self):
         return "#{:06x}".format(random.randint(0, 0xFFFFFF))
-
     def generate_placeholder_picture(self, email):
         return {
             "background_color": self.get_random_color(),
             "initial": email[0].upper() if email else ''
         }
-
     def save(self, *args, **kwargs):
         if not self.pk:  # Check if the instance is being created
             placeholder = self.generate_placeholder_picture(self.email)
@@ -101,8 +86,6 @@ class GroupInvitation(models.Model):
 
     def __str__(self):
         return f"Invitation to {self.invitee_email} for {self.group.group_name}"
-
-
 
 class Project(models.Model):
         group = models.ForeignKey(Group, on_delete=models.CASCADE, related_name="projects",null=True, blank=True)
@@ -144,8 +127,6 @@ class Epic(models.Model):
     StoryPoint = models.IntegerField(default=1)
     Priority = models.CharField(max_length=30,default="")
 
-    
-
 class issue(models.Model):
     IssueName = models.CharField(max_length=30,default="",unique=False)
     issue_id = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
@@ -162,7 +143,6 @@ class issue(models.Model):
     Priority = models.CharField(max_length=30,default="")
     class Meta:
         unique_together = ("projectId", "IssueName")
-
     def __str__(self):
         return f"{self.IssueName} ({self.projectId})"
 
@@ -177,5 +157,10 @@ class Comments(models.Model):
     CommentBody = models.TextField(max_length=300, default='')
 
 class UploadedFile(models.Model):
-    file = models.FileField(upload_to='uploads/')
-    uploaded_at = models.DateTimeField(auto_now_add=True)
+    id = id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    file = models.FileField(upload_to='uploads/')  
+    uploaded_at = models.DateTimeField(auto_now_add=True)  
+    issue = models.ForeignKey(issue, on_delete=models.CASCADE)  # Assuming Issue is your related model
+
+    def __str__(self):
+        return self.file.name

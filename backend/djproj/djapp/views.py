@@ -1110,14 +1110,6 @@ def upload_file(request):
 
     return JsonResponse({'message': 'Files uploaded successfully!', 'files': uploaded_files})
 
-
-
-
-
-
-
-  
-
 from django.http import JsonResponse
 from django.contrib.auth import get_user_model
 from .models import GroupMember, Group
@@ -1159,5 +1151,4 @@ def get_group_members(request):
     members = GroupMember.objects.filter(group__group_id=group_id).values('member_email')
 
     return JsonResponse(list(members), safe=False)
-
 

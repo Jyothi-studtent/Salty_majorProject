@@ -5,6 +5,7 @@ import axios from 'axios';
 import Create_project from './Create_project';
 import Project_list from './Project_list';
 import './css/project.css';
+import CompulsoryIssues from './CompulsoryIssues';
 
 const Home = ({ user }) => {
   const [isAdmin_Staff, setisAdmin_Staff] = useState(false);
@@ -46,6 +47,7 @@ const Home = ({ user }) => {
     <div className='project'>
       {console.log(isAdmin_Staff)}
       {isAdmin_Staff ? <Create_project /> : <></>}
+      {isAdmin_Staff ? <CompulsoryIssues /> : <></>}
       <Project_list />
     </div>
   );

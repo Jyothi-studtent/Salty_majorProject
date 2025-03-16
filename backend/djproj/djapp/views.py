@@ -72,7 +72,8 @@ def add_issue(request):
     else:
         return JsonResponse({'success': False, 'message': 'Invalid request method'})
 
-
+def get_csrf_token(request):
+    return JsonResponse({"csrfToken": get_token(request)})
 
 @csrf_exempt
 def create_group(request):
@@ -1075,6 +1076,28 @@ def list_projects_user_is_part_of(request):
     else:
         return JsonResponse({'error': 'Only GET requests are allowed'}, status=405)
   
+from django.views.decorators.csrf import csrf_exempt
+from django.http import JsonResponse
+from django.shortcuts import get_object_or_404
+from djapp.models import UploadedFile
+from django.views.decorators.http import require_http_methods
+from django.middleware.csrf import get_token
+
+@csrf_exempt
+@require_http_methods(["DELETE"])
+def delete_file(request, file_id):
+    if request.method != "DELETE":
+        return JsonResponse({'error': 'Invalid request method'}, status=405)
+
+    file_obj = get_object_or_404(UploadedFile, id=file_id)
+
+    # Delete the file from storage
+    file_obj.file.delete(save=False)  # Removes the file from storage
+
+    # Delete the database entry
+    file_obj.delete()
+
+    return JsonResponse({'message': 'File deleted successfully!'}, status=200)
 
 
 def list_files(request):
@@ -1164,4 +1187,80 @@ def get_group_members(request):
     members = GroupMember.objects.filter(group__group_id=group_id).values('member_email')
 
     return JsonResponse(list(members), safe=False)
+
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+import json
+from .models import issue, Project  # Ensure you import the correct models
+
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+import json
+from .models import issue, Project  # Ensure you import the correct models
+
+@csrf_exempt
+def create_compulsory_issue(request):
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            print("Received data:", data)  # Debugging: Print the entire payload
+            
+            issue_name = data.get('issue_name')
+            description = data.get('description')
+            story_points = data.get('story_points', 1)
+            priority = data.get('priority', 'Medium')
+            deadline = data.get('deadline', None)
+            projects = data.get('projects', [])
+            
+            if not issue_name or not description or not projects:
+                return JsonResponse({'error': 'Issue name, description, and projects are required'}, status=400)
+
+            created_issues = []
+            
+            for project_data in projects:
+                project_id = project_data.get('projectid')
+                assigned_by = project_data.get('teamlead_email')
+                
+                print(f"Processing project ID: {project_id}")  # Debugging: Print project ID
+                
+                try:
+                    project = Project.objects.get(projectid=project_id)
+                    print(f"Found project: {project.projectid}")  # Debugging: Confirm project exists
+                    
+                    new_issue = issue.objects.create(
+                        IssueName=issue_name,
+                        description=description,
+                        StoryPoint=story_points,
+                        Priority=priority,
+                        Deadline=deadline,
+                        projectId=project,
+                        assigned_by=assigned_by,
+                        status='To-Do'
+                    )
+                    created_issues.append({
+                        'issue_id': new_issue.id,
+                        'project_id': project_id
+                    })
+                except Project.DoesNotExist:
+                    print(f"Project with ID {project_id} does not exist")  # Debugging: Project not found
+                    return JsonResponse({'error': f'Project with ID {project_id} does not exist'}, status=400)
+                except Exception as e:
+                    print(f"Error creating issue: {e}")  # Debugging: Catch any other errors
+                    return JsonResponse({'error': str(e)}, status=500)
+            
+            return JsonResponse({'message': 'Compulsory issues created successfully', 'issues': created_issues}, status=201)
+        except json.JSONDecodeError:
+            return JsonResponse({'error': 'Invalid JSON'}, status=400)
+    else:
+        return JsonResponse({'error': 'Only POST method allowed'}, status=405)
+
+
+
+
+
+
+
+
+
+
 

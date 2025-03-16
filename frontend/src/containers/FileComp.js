@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "./css/FileComp.css"; // Import the CSS file
+import Cookies from "js-cookie";
 
 const FileComp = ({ issueId, isEditing, issue_id }) => {
     const [files, setFiles] = useState([]);
@@ -22,10 +23,38 @@ const FileComp = ({ issueId, isEditing, issue_id }) => {
         }
     };
 
+    const handleDelete = async (fileId) => {
+        try {
+            const csrfToken = Cookies.get("csrftoken");  // ✅ Get CSRF token from cookies
+            
+            const response = await axios.delete(`http://127.0.0.1:8000/djapp/delete_file/${fileId}/`, {
+                headers: {
+                    "X-CSRFToken": csrfToken,
+                    "Authorization": `Bearer ${localStorage.getItem("access_token")}`,
+                    "Content-Type": "application/json"
+                },
+                withCredentials: true,
+            });
+    
+            console.log("File deleted successfully:", response.data);
+        } catch (error) {
+            console.error("Delete error:", error);
+        }
+    };
     const handleFileChange = (event) => {
         const selectedFiles = Array.from(event.target.files);
         setNewFiles((prevFiles) => [...prevFiles, ...selectedFiles]);
     };
+    
+    useEffect(() => {
+        axios.get("http://127.0.0.1:8000/djapp/get_csrf_token/", { withCredentials: true })
+            .then(response => {
+                console.log("CSRF Token fetched:", response.data.csrfToken);
+                Cookies.set("csrftoken", response.data.csrfToken);  // Ensure it's stored
+            })
+            .catch(error => console.error("CSRF Fetch error:", error));
+    }, []);
+    
 
     const handleUpload = async () => {
         if (newFiles.length === 0) {
@@ -34,7 +63,7 @@ const FileComp = ({ issueId, isEditing, issue_id }) => {
         }
 
         const formData = new FormData();
-        newFiles.forEach(file => formData.append("files", file)); // Ensure backend expects 'files' key
+        newFiles.forEach((file) => formData.append("files", file)); // Ensure backend expects 'files' key
         formData.append("issue_id", issue_id);
 
         try {
@@ -65,6 +94,11 @@ const FileComp = ({ issueId, isEditing, issue_id }) => {
                             <span className="uploaded-time">
                                 (Uploaded: {new Date(file.uploaded_at).toLocaleString()})
                             </span>
+                            {isEditing && (
+                                <button onClick={() => handleDelete(file.id)} className="delete-button">
+                                    Delete
+                                </button>
+                            )}
                         </li>
                     ))}
                 </ul>

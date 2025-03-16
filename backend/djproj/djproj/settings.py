@@ -28,8 +28,7 @@ SECRET_KEY = 'django-insecure-itdxq1zpl7-bz0vgads%%1e-q%%(yfd*1#^k3hjmlf3m4%u6lk
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
-
+ALLOWED_HOSTS = ["localhost", "127.0.0.1", "testserver"]
 
 # Application definition
 
@@ -145,8 +144,12 @@ CORS_ALLOW_ALL_ORIGINS = True
 CORS_ORIGIN_WHITELIST = (
     'http://localhost:3000', 'http://localhost:8000' # Add your frontend origin here
 )
+CORS_ALLOWED_ORIGINS = ["http://localhost:3000"]
+CSRF_COOKIE_HTTPONLY = False 
 CORS_ALLOW_CREDENTIALS = True
 CSRF_TRUSTED_ORIGINS = ['http://localhost:3000']
+SESSION_COOKIE_SAMESITE = "Lax"
+CSRF_USE_SESSIONS = False
 # Optional: Allow specific headers in CORS requests
 
 STATIC_URL = '/static/'

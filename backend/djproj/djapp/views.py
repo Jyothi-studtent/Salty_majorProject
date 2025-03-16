@@ -1192,65 +1192,65 @@ from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 import json
 from .models import issue, Project  # Ensure you import the correct models
-
-from django.http import JsonResponse
-from django.views.decorators.csrf import csrf_exempt
-import json
-from .models import issue, Project  # Ensure you import the correct models
-
 @csrf_exempt
 def create_compulsory_issue(request):
     if request.method == 'POST':
         try:
-            data = json.loads(request.body)
+            data = json.loads(request.body)  # Parse JSON data from the request
             print("Received data:", data)  # Debugging: Print the entire payload
-            
+
             issue_name = data.get('issue_name')
             description = data.get('description')
             story_points = data.get('story_points', 1)
             priority = data.get('priority', 'Medium')
             deadline = data.get('deadline', None)
-            projects = data.get('projects', [])
-            
+            projects = data.get('projects', [])  # List of project IDs
+            assigned_by = data.get('assigned_by', '')  # Email of the user creating the issue
+
             if not issue_name or not description or not projects:
                 return JsonResponse({'error': 'Issue name, description, and projects are required'}, status=400)
 
             created_issues = []
-            
-            for project_data in projects:
-                project_id = project_data.get('projectid')
-                assigned_by = project_data.get('teamlead_email')
-                
-                print(f"Processing project ID: {project_id}")  # Debugging: Print project ID
-                
+
+            for project_id in projects:
                 try:
+                    # Fetch the project
+                    print(f"Fetching project with ID: {project_id}")  # Debugging: Print project ID
                     project = Project.objects.get(projectid=project_id)
                     print(f"Found project: {project.projectid}")  # Debugging: Confirm project exists
-                    
+
+                    # Create the issue for the project
                     new_issue = issue.objects.create(
                         IssueName=issue_name,
                         description=description,
                         StoryPoint=story_points,
                         Priority=priority,
                         Deadline=deadline,
-                        projectId=project,
+                        projectId=project,  # Pass the Project object directly
                         assigned_by=assigned_by,
-                        status='To-Do'
+                        status='To-Do',
+                        IsCompulsory=True,  # Mark the issue as compulsory
                     )
                     created_issues.append({
-                        'issue_id': new_issue.id,
-                        'project_id': project_id
+                        'issue_id': str(new_issue.issue_id),
+                        'project_id': project_id,
                     })
                 except Project.DoesNotExist:
                     print(f"Project with ID {project_id} does not exist")  # Debugging: Project not found
                     return JsonResponse({'error': f'Project with ID {project_id} does not exist'}, status=400)
                 except Exception as e:
-                    print(f"Error creating issue: {e}")  # Debugging: Catch any other errors
+                    print(f"Error creating issue for project {project_id}: {e}")  # Debugging: Catch any other errors
                     return JsonResponse({'error': str(e)}, status=500)
-            
-            return JsonResponse({'message': 'Compulsory issues created successfully', 'issues': created_issues}, status=201)
+
+            return JsonResponse({
+                'message': 'Compulsory issues created successfully',
+                'issues': created_issues,
+            }, status=201)
         except json.JSONDecodeError:
             return JsonResponse({'error': 'Invalid JSON'}, status=400)
+        except Exception as e:
+            print(f"Unexpected error: {e}")  # Debugging: Catch any unexpected errors
+            return JsonResponse({'error': str(e)}, status=500)
     else:
         return JsonResponse({'error': 'Only POST method allowed'}, status=405)
 

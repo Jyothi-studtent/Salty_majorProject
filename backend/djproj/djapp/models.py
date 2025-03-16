@@ -143,7 +143,7 @@ class issue(models.Model):
     IssueName = models.CharField(max_length=30,default="",unique=False)
     issue_id = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
     sprint = models.ForeignKey(Sprint, on_delete=models.SET_NULL, null=True, blank=True,default="null")
-    projectId = models.ForeignKey(Project, on_delete=models.SET_NULL, null=True, blank=True,default="null")
+    projectId = models.ForeignKey(Project, on_delete=models.SET_NULL, null=True, blank=True)
     IssueType=models.CharField(max_length=30,default="")
     status=models.CharField(max_length=30,default="To-Do")
     assignee=models.CharField(max_length=30,default="",null=True)

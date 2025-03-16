@@ -47,10 +47,10 @@ const Sidebar = () => {
               <IoList />
               {isOpen && <p>Filters</p>}
             </button>
-            <button type="button" onClick={() => navigateTo("/myissues")}>
+            {/* <button type="button" onClick={() => navigateTo("/myissues")}>
               <GoIssueClosed />
               {isOpen && <p>My Issues</p>}
-            </button>
+            </button> */}
             <button type="button" onClick={() => navigateTo("/contributions")}>
               <BiSolidPieChartAlt2 />
               {isOpen && <p>Reports</p>}

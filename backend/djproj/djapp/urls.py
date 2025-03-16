@@ -56,4 +56,5 @@ urlpatterns = [
     path('list_projects_user_is_part_of/', list_projects_user_is_part_of, name='list_projects_user_is_part_of'),
     path('upload_file/', upload_file, name='upload_file'),
     path('files/', list_files, name='list_files'),
+    # path('get_completed_Sprints/', get_completed_Sprints, name='get_completed_Sprints'),
 ]

@@ -16,6 +16,7 @@ const DisplayIssueFilters = ({ data, user }) => {
 
   useEffect(() => {
     setIssue(data);
+    console.log(data);
   }, [data]);
 
   useEffect(() => {
@@ -25,7 +26,6 @@ const DisplayIssueFilters = ({ data, user }) => {
         setAssigneeOptions(teamMembersResponse.data.team_members);
 
         const sprintsResponse = await axios.get(`http://localhost:8000/djapp/get_sprints/?projectid=${selectedProject}`);
-        console.log(sprintsResponse, "*******************************")
         setSprintOptions(sprintsResponse.data.sprint_in_project);
       } catch (error) {
         console.error('Error fetching team members and sprints:', error);
@@ -52,28 +52,25 @@ const DisplayIssueFilters = ({ data, user }) => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setIssue(prevIssue => ({
-      ...prevIssue,
-      [name]: value
-    }));
-
-    if (name === 'assignee') {
-      setIssue(prevIssue => ({
-        ...prevIssue,
-        assigned_by: user.email
-      }));
-    } else if (name === 'file_field') {
-      setFiles([...files, ...e.target.files]);
-    }
+    console.log("Changing:", name, "to", value); // Debugging log
+  
+    setIssue(prevIssue => {
+      const updatedIssue = { ...prevIssue, [name]: value };
+      console.log("Updated Issue after change:", updatedIssue); // Debugging log
+      return updatedIssue;
+    });
   };
+  
 
   const handleEdit = () => {
     setIsEditing(true);
   };
 
   const handleSave = async () => {
+    console.log("Saving issue with data:", issue);
     try {
-      await axios.post(`http://localhost:8000/djapp/update_issue/`, issue);
+      const response = await axios.post(`http://localhost:8000/djapp/update_issue/`, issue);
+      console.log("Response from API:", response.data);
       setIsEditing(false);
     } catch (error) {
       console.error("There was an error updating the issue!", error);
@@ -173,7 +170,8 @@ const DisplayIssueFilters = ({ data, user }) => {
           <p>
             <strong>Priority:</strong>
             {isEditing ? (
-              <select className="display-issue-select" name="Priority" value={issue.Priority || ''} onChange={handleChange}>
+              <select className="display-issue-select" name="Priority" value={issue.Priority !== "" ? issue.Priority : '----'}
+              onChange={handleChange}>
                 <option value="">Select...</option>
                 <option value="Highest">Highest</option>
                 <option value="High">High</option>

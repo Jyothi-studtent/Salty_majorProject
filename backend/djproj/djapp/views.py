@@ -430,6 +430,12 @@ def create_issue(request):
 
 import traceback  # For detailed exception traceback
 
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+from django.db.models import Q
+
+from django.db.models import F
+
 @csrf_exempt
 def filters_function(request):
     if request.method == 'GET':
@@ -437,24 +443,27 @@ def filters_function(request):
         filter_type = request.GET.get('filter')
         status = request.GET.get('status')
         current_user = request.GET.get('currentUser')
+
         if not projectid:
             return JsonResponse({"error": "Project ID is required"}, status=400)
-        issues = []
-        base_query = issue.objects.exclude(sprint__status='completed')
-        if projectid == 'allprojects':
-                issues = list(base_query.filter(assignee=current_user).values())
+
+        # Exclude issues from completed sprints
+        base_query = issue.objects.exclude(sprint__status='completed').annotate(sprint_status=F('sprint__status'))
+
+        if filter_type == 'all_issues':
+            issues = list(base_query.filter(projectId_id=projectid).values())
+        elif filter_type == 'assigned_to_me':
+            issues = list(base_query.filter(projectId_id=projectid, assignee=current_user).values())
+        elif filter_type == 'unassigned':
+            issues = list(base_query.filter(projectId_id=projectid, assignee='').values())
+        elif filter_type == 'complete_sprint_issue':
+            completed_sprints = Sprint.objects.filter(project__projectid=projectid, status='completed').values_list('id', flat=True)
+            issues = list(issue.objects.filter(sprint_id__in=completed_sprints).annotate(sprint_status=F('sprint__status')).values())
+        elif filter_type == 'Status':
+            issues = list(base_query.filter(projectId_id=projectid, status=status).values())
         else:
-            if filter_type == 'all_issues':
-                issues = list(base_query.filter(projectId_id=projectid).values())  
-            elif filter_type == 'assigned_to_me':
-                issues = list(base_query.filter(projectId_id=projectid, assignee=current_user).values())
-            elif filter_type == 'unassigned':
-                issues = list(base_query.filter(projectId_id=projectid, assignee='').values())
-            
-            elif filter_type == 'Status':
-                issues = list(base_query.filter(projectId_id=projectid, status=status).values()) 
-            else:
-                return JsonResponse({"error": "Invalid filter type"}, status=400)
+            return JsonResponse({"error": "Invalid filter type"}, status=400)
+
         return JsonResponse(issues, safe=False)
     else:
         return JsonResponse({"error": "Invalid request method"}, status=405)
@@ -472,22 +481,25 @@ def update_issue(request):
             issue_obj.status = data.get('status', issue_obj.status)
             issue_obj.assignee = data.get('assignee', issue_obj.assignee)
             issue_obj.assigned_by = data.get('assigned_by', issue_obj.assigned_by)
-           
             issue_obj.sprint_id = data.get('sprint_id', issue_obj.sprint_id)
             issue_obj.projectId_id = data.get('projectId_id', issue_obj.projectId_id)
             issue_obj.file_field = data.get('file_field', issue_obj.file_field)
+            issue_obj.Priority = data.get('Priority', issue_obj.Priority)
             story_point = data.get('StoryPoint')
             if story_point is not None:
                 try:
                     issue_obj.StoryPoint = int(story_point)
                 except ValueError:
                     return JsonResponse({'status': 'error', 'message': 'StoryPoint must be a number'})
-            
+
             issue_obj.save()
             return JsonResponse({'status': 'success'})
+        
         except issue.DoesNotExist:
             return JsonResponse({'status': 'error', 'message': 'Issue not found'})
+    
     return JsonResponse({'status': 'error', 'message': 'Invalid request method'})
+
 
 from datetime import datetime
 from django.shortcuts import get_object_or_404
@@ -622,6 +634,7 @@ def countsprints(request):
             return JsonResponse({"error": "Project ID is required"}, status=400)
     else:
         return JsonResponse({"error": "Only GET requests are allowed"}, status=405)
+    
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 @csrf_exempt

@@ -11,11 +11,12 @@ import Signup from './containers/Signup';
 import Group from './containers/Group';
 import View_invitation from './containers/View_invitation';
 
+
 import Board from './containers/board';
 import Activate from './containers/Activate';
 import Resetpassword from './containers/Resetpassword';
 import Resetpasswordconfirm from './containers/Resetpasswordconfirm';
-import Accept_invitation from './containers/Accept_invitation';
+
 import Layout from './hocs/Layout';
 import { Provider } from 'react-redux';
 import store from './store';
@@ -30,6 +31,8 @@ import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import Timemaxi from './containers/Timemaxi';
 import FileUpload from './containers/FileUpload';
+import JoinProject from './containers/JoinProject';
+
 
 
 const App = () => {
@@ -53,7 +56,7 @@ const App = () => {
           
             {/* <Route path="/project/:projectid" element={<ProjectPage />} /> */}
             <Route path="/group/:group_id/project/:projectid/boards" element={<Board />} />
-            <Route path="/accept-invitation" element={<Accept_invitation />} />
+            
             <Route path="/group/:group_id/project/:projectid/backlog" element={<DisplayBacklog/>} />
             <Route path="/group/:group_id/project/:projectid/filters" element={<Filters/>} />
             <Route path="/group/:group_id/project/:projectid/myissues" element={<MyIssues />} />
@@ -62,6 +65,8 @@ const App = () => {
             <Route path="/group/:group_id/project/:projectid/time" element={<Time />} />
             <Route path="/group/:group_id/project/:projectid/times" element={<Timemaxi />} />
             <Route path="/fileupload" element={<FileUpload />} />
+            <Route path="/join-project/:token" element={<JoinProject />} />
+
             </Route>
             </Routes>
             </Layout>

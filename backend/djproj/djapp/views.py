@@ -227,77 +227,9 @@ def csrf_token(request):
     csrf_token = get_token(request)
     print(csrf_token)
     return JsonResponse({'csrfToken': csrf_token})
-    
-@csrf_exempt
-def generate_invitation_token(request):
-    if request.method == 'POST':
-        data = json.loads(request.body)
-        email = data.get('email')
-        projectid = data.get('projectid')
-          # Get projectid from the request data
-        serializer = URLSafeTimedSerializer('your-secret-key')
-        token = serializer.dumps(email)
-        try:
-            project_ins = Project.objects.get(projectid=projectid)
-        except Project.DoesNotExist:
-            return JsonResponse({'error': 'Project not found'}, status=404)
-        if Project_TeamMember.objects.filter(team_member_email=email,project=project_ins).exists() or project_ins.teamlead_email == email :
-            return JsonResponse({'error': 'Email is already associated with this project'}, status=400)
-        else:
-            invitation_link = f'http://localhost:3000/accept-invitation?projectid={projectid}&token={token}'
-            subject = "Welcome to Salty- Join Project"
-            message = f"Welcome! You're invited to join the project {project_ins.projectname}. \n Click the link to accept:\n{invitation_link}"
-            send_mail(subject, message, EMAIL_HOST_USER, [email], fail_silently=True)
-            print("sent")
-            return JsonResponse({'token': token})
-       
-    else:
-        return JsonResponse({'error': 'Method not allowed'}, status=405)
+ 
     
 
-@csrf_exempt
-def verify_invitation_token(request):
-    if request.method == 'POST':
-        data = json.loads(request.body)
-        token = data.get('token')
-        projectid = data.get('projectId')
-        print(token, "gfkkkkkkkkkkkkkkkkkkkkverify")
-        serializer = URLSafeTimedSerializer('your-secret-key')
-        try:
-            email = serializer.loads(token, max_age=18000)  # Token expires in 5 hours
-            user_exists = UserAccount.objects.filter(email=email).exists()
-            print(user_exists,"jjjjj")
-            if user_exists:
-                return JsonResponse({'action': 'login','projectid':projectid})  # Email is associated with an existing user
-            else:
-                return JsonResponse({'action': 'signup','projectid':projectid})  # Email is not associated with any user account
-        except SignatureExpired:
-            return JsonResponse({'error': 'Token has expired'}, status=400)
-        except BadSignature:
-            return JsonResponse({'error': 'Invalid token'}, status=400)
-        
-@csrf_exempt
-
-def process_invitation_token(request):
-    if request.method == 'POST':
-        # Extract email, project ID, and invitation token from the request data
-        data = json.loads(request.body)
-        email = data.get('email')
-        project_id = data.get('projectid')
-        try:
-            project_ins = Project.objects.get(projectid=project_id)
-        except Project.DoesNotExist:
-            return JsonResponse({'error': 'Project not found'}, status=404)
-        # Check if the email is already a team member for the given project
-        if Project_TeamMember.objects.filter(team_member_email=email, project=project_ins).exists():
-            return JsonResponse({'message': 'Email is already a team member for this project'}, status=400)
-        # Add the new team member to the project
-        team_member = Project_TeamMember.objects.create(team_member_email=email, project=project_ins)
-        team_member.save()
-        return JsonResponse({'message': 'Invitation processed successfully'})
-    else:
-        return JsonResponse({'error': 'Method not allowed'}, status=405)
-    
 
 @csrf_exempt
 def project_list(request):
@@ -1160,4 +1092,59 @@ def get_group_members(request):
 
     return JsonResponse(list(members), safe=False)
 
+def invite_project_members(request):
+    if request.method == 'POST':
+        data = request.json()
+        project_id = data.get('project_id')
+        emails = data.get('emails')
 
+        project = get_object_or_404(Project, projectid=project_id)
+        group = project.group
+
+        invitations = []
+        for email in emails:
+            token = get_random_string(32)  # Generate a unique token
+            invitation = GroupInvitation.objects.create(
+                group=group,
+                invitee_email=email,
+                token=token,
+                is_accepted=False
+            )
+            invitations.append(invitation)
+
+            # Generate join link
+            join_url = f"http://localhost:3000/join-project/{token}"  # Adjust based on frontend route
+
+            # Send Email
+            send_mail(
+                subject="Project Invitation",
+                message=f"You have been invited to join the project '{project.projectname}'. Click here to join: {join_url}",
+                from_email="your-email@example.com",
+                recipient_list=[email],
+                fail_silently=False,
+            )
+
+        return JsonResponse({"message": "Invitations sent successfully!"}, status=200)
+    return JsonResponse({"error": "Invalid request"}, status=400)
+
+
+def accept_invite(request):
+    if request.method == 'POST':
+        data = request.json()
+        token = data.get('token')
+
+        invitation = get_object_or_404(GroupInvitation, token=token, is_accepted=False)
+        
+        # Add user to project team
+        Project_TeamMember.objects.create(
+            project=Project.objects.get(group=invitation.group),
+            team_member_email=invitation.invitee_email
+        )
+
+        # Mark invitation as accepted
+        invitation.is_accepted = True
+        invitation.save()
+
+        return JsonResponse({"message": "You have successfully joined the project!"}, status=200)
+    
+    return JsonResponse({"error": "Invalid request"}, status=400)

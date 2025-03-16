@@ -5,13 +5,8 @@ urlpatterns = [
     path('create_group/', create_group, name='create_group'),
    path('create/', create_project, name='create_project'),
     path('add/', add_issue, name='add_issue'),
-    path('generate_invitation_token/',  generate_invitation_token, name='generate_invitation_token'),
-    path('verify_invitation_token/',verify_invitation_token, name='verify_invitation_token'),
-    path('process_invitation_token/',process_invitation_token, name='process_invitation_token'),
-    path('invite_group_members/',invite_group_members, name='invite_group_members'),
-    # path('view_invitation/',view_invitation, name='view_invitation'),
-    # path('accept_invitation/',accept_invitation, name='accept_invitation'),
-    # path('decline_invitation/',decline_invitation, name='decline_invitation'),   
+
+
     path('project_list/',project_list, name='project_list'),
     path('group_list/',group_list, name='group_list'),
     path('issues/', ReactViews, name='project-issues'),
@@ -27,7 +22,7 @@ urlpatterns = [
     path('delete_sprint/', delete_sprint, name= 'delete_sprint'),
     path('get_team_members/', get_team_members, name="get_team_members"),
     path('get_sprints/', get_sprints, name="get_sprints"),
-
+    
     path('get_activesprints/', get_activesprints, name="get_sprints"),
     path('csrf_token/', csrf_token, name='csrf_token'),  
     path('create_issue/', create_issue, name='create_issue'),
@@ -56,4 +51,6 @@ urlpatterns = [
     path('list_projects_user_is_part_of/', list_projects_user_is_part_of, name='list_projects_user_is_part_of'),
     path('upload_file/', upload_file, name='upload_file'),
     path('files/', list_files, name='list_files'),
+    path('invite_project_members/', invite_project_members, name='invite_project_members'),
+    path('accept_invite/', accept_invite, name='accept_invite'),
 ]

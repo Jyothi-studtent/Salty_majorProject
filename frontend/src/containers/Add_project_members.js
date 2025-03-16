@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import './css/add_group_members.css';
 
-const Add_group_members = ({ group, onClose }) => {
+const Add_project_members = ({ group, onClose }) => {
     const [newEmail, setNewEmail] = useState('');
     const [emailList, setEmailList] = useState([]);
 
@@ -19,13 +19,13 @@ const Add_group_members = ({ group, onClose }) => {
 
     const handleInviteMembers = async () => {
         if (!group || emailList.length === 0) return;
-
+    
         try {
-            await axios.post('http://localhost:8000/djapp/invite_group_members/', {
-                group_id: group.group_id,
+            await axios.post('http://localhost:8000/djapp/invite_project_members/', {
+                project_id: group.projectid, // Ensure project ID is sent
                 emails: emailList
             });
-
+    
             alert('Invitations sent successfully!');
             onClose();
         } catch (error) {
@@ -33,12 +33,12 @@ const Add_group_members = ({ group, onClose }) => {
             alert('Failed to send invitations.');
         }
     };
-
+    
     return (
         <div className="modal">
             <div className="modal-content">
                 <span className="close" onClick={onClose}>&times;</span>
-                <h3>Add Members to {group.group_name}</h3>
+                
 
                 {/* Box displaying added emails */}
                 <div className="email-list-box">
@@ -72,4 +72,4 @@ const Add_group_members = ({ group, onClose }) => {
     );
 };
 
-export default Add_group_members;
+export default Add_project_members;

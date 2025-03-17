@@ -2,9 +2,28 @@
 backend/djproj/*.sqlite3
 backend/djproj/*.db
 backend/venv
-# Ignore Django migrations
+
+# Ignore Django migrations except __init__.py
 backend/djproj/**/migrations/
 !backend/djproj/**/migrations/__init__.py  # Keeps __init__.py
+
+backend/djapp/**/migrations/
+!backend/djapp/**/migrations/__init__.py  # Keeps __init__.py
+
+# Ignore Python cache files
+backend/djapp/**/migrations/__pycache__/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+backend/djproj/__pycache__/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+
 
 # Ignore frontend build folder
 frontend/build/
@@ -13,12 +32,6 @@ frontend/build/
 .env
 backend/.env
 frontend/.env
-
-# Ignore Python compiled files
-__pycache__/
-*.pyc
-*.pyo
-*.pyd
 
 # Ignore node_modules
 frontend/node_modules/

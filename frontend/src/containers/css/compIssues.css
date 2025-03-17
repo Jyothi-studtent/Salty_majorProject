@@ -43,7 +43,7 @@
   }
   
   form button {
-    background-color: #28a745;
+    /* background-color: #28a745; */
     color: white;
     border: none;
     padding: 10px;
@@ -54,13 +54,13 @@
   }
   
   form button:hover {
-    background-color: #218838;
+    /* background-color: #218838; */
   }
   
   form button[type="button"] {
-    background-color: #dc3545;
+    /* background-color: #dc3545; */
   }
   
   form button[type="button"]:hover {
-    background-color: #c82333;
+    /* background-color: #c82333; */
   }

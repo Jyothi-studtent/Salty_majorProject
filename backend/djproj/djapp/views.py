@@ -431,8 +431,25 @@ def filters_function(request):
         elif filter_type == 'Status':
             issues = list(base_query.filter(projectId_id=projectid, status=status).values())
         else:
-            return JsonResponse({"error": "Invalid filter type"}, status=400)
+            if filter_type == 'complete_issues':
+                completed_sprints = Sprint.objects.filter(status="completed")
 
+        
+                issues_query = issue.objects.filter(sprint__in=completed_sprints)
+
+
+                issues = list(issues_query.values())
+            elif filter_type == 'all_issues':
+                issues = list(base_query.filter(projectId_id=projectid).values())  
+            elif filter_type == 'assigned_to_me':
+                issues = list(base_query.filter(projectId_id=projectid, assignee=current_user).values())
+            elif filter_type == 'unassigned':
+                issues = list(base_query.filter(projectId_id=projectid, assignee='').values())
+            
+            elif filter_type == 'Status':
+                issues = list(base_query.filter(projectId_id=projectid, status=status).values()) 
+            else:
+                return JsonResponse({"error": "Invalid filter type"}, status=400)
         return JsonResponse(issues, safe=False)
     else:
         return JsonResponse({"error": "Invalid request method"}, status=405)
@@ -1348,6 +1365,7 @@ def create_compulsory_issue(request):
             story_points = data.get('story_points', 1)
             priority = data.get('priority', 'Medium')
             deadline = data.get('deadline', None)
+            sprint =  None
             projects = data.get('projects', [])  # List of project IDs
             assigned_by = data.get('assigned_by', '')  # Email of the user creating the issue
 
@@ -1373,6 +1391,7 @@ def create_compulsory_issue(request):
                         projectId=project,  # Pass the Project object directly
                         assigned_by=assigned_by,
                         status='To-Do',
+                        sprint=sprint,
                         IsCompulsory=True,  # Mark the issue as compulsory
                     )
                     created_issues.append({

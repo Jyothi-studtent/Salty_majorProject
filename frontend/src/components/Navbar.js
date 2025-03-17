@@ -91,8 +91,30 @@ const Navbar = ({ logout, isAuthenticated, user }) => {
                 <ul className='nav-list'>
                     <li className='nav-item nav-logo-container'>
                         <button className='nav-button'>Salty</button>
+<<<<<<< HEAD
                         {isAuthenticated && <GroupDropdown />} {/* ✅ Show GroupDropdown only when logged in */}
                     </li>
+=======
+                    </li>
+                    <li className='nav-item'>
+    <Link to={`/group`} className='nav-button'>
+        Groups
+    </Link>
+</li>
+                    {/* <li className='nav-item'>
+                        <button className='nav-button' >Groups</button>
+                        <Link to={`/group`} className='dropdown-item'></Link> */}
+                        {/* {isDropdownOpen && (
+                            <ul className='dropdown' ref={dropdownRef}>
+                                {projects.map(project => (
+                                    <li key={project.projectid}>
+                                        
+                                    </li>
+                                ))}
+                            </ul>
+                        )} */}
+                    {/* </li> */}
+>>>>>>> 34d3f2957b2348ebd2e27d7f11c290c439d61656
 
                     {isAuthenticated ? authLinks() : guestLinks()}
 

@@ -76,7 +76,7 @@
 }
 
 .login-form-control {
-  flex: 1; /* Make the input take up as much space as possible */
+  flex: 1;
   padding: 0.5rem;
   font-size: 1rem;
   border: 1px solid #ccc;
@@ -84,13 +84,13 @@
 }
 
 .eye-button-login {
-  background: none; /* Remove default button styles */
+  background: none; 
   border: none;
   cursor: pointer;
-  margin-left: 0.5rem; /* Add some space between input and button */
+  margin-left: 0.5rem; 
   padding: 0.5rem;
   font-size: 1.2rem;
-  color: #333; /* You can adjust this based on your design */
+  color: #333;
 }
 
 .eye-button-login:focus {

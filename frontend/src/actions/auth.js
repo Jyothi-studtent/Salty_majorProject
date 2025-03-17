@@ -182,9 +182,11 @@ export const verify = (uid, token) => async dispatch => {
 
     const body = JSON.stringify({ uid, token });
 
+    console.log("before verify")
     try {
+        console.log("before post")
         await axios.post(`${process.env.REACT_APP_API_URL}/auth/users/activation/`, body, config);
-
+        console.log("after psot")
         dispatch({
             type: ACTIVATION_SUCCESS,
         });

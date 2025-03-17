@@ -44,7 +44,7 @@ class UserAccount(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(max_length=255, unique=True)
     first_name = models.CharField(max_length=255)
     last_name = models.CharField(max_length=255)
-    is_admin = models.BooleanField(default =False)
+    is_admin = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
     usn = models.CharField(max_length=255)
@@ -59,10 +59,10 @@ class UserAccount(AbstractBaseUser, PermissionsMixin):
 
     def get_full_name(self):
         return self.first_name
-   
+
     def get_short_name(self):
         return self.first_name
-   
+
     def __str__(self):
         return self.email
 
@@ -74,12 +74,15 @@ class UserAccount(AbstractBaseUser, PermissionsMixin):
             "background_color": self.get_random_color(),
             "initial": email[0].upper() if email else ''
         }
+
     def save(self, *args, **kwargs):
+        self.email = self.email.lower()  # ✅ Convert email to lowercase before saving
         if not self.pk:  # Check if the instance is being created
             placeholder = self.generate_placeholder_picture(self.email)
             self.color = placeholder["background_color"]
             self.first_letter = placeholder["initial"]
         super(UserAccount, self).save(*args, **kwargs)
+
 
 
 

@@ -24,7 +24,7 @@ __pycache__/
 *.pyd
 
 
-
+backend/djproj/build/
 # Ignore frontend build folder
 frontend/build/
 

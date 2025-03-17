@@ -129,17 +129,23 @@ const Navbar = ({ logout, isAuthenticated, user }) => {
                         <button className='nav-button'>Salty</button>
                     </li>
                     <li className='nav-item'>
-                        <button className='nav-button' onClick={toggleDropdown}>Project</button>
-                        {isDropdownOpen && (
+    <Link to={`/group`} className='nav-button'>
+        Groups
+    </Link>
+</li>
+                    {/* <li className='nav-item'>
+                        <button className='nav-button' >Groups</button>
+                        <Link to={`/group`} className='dropdown-item'></Link> */}
+                        {/* {isDropdownOpen && (
                             <ul className='dropdown' ref={dropdownRef}>
                                 {projects.map(project => (
                                     <li key={project.projectid}>
-                                        <Link to={`/group/${project.group_id}/project/${project.projectid}/backlog`} className='dropdown-item'>{project.projectname}</Link>
+                                        
                                     </li>
                                 ))}
                             </ul>
-                        )}
-                    </li>
+                        )} */}
+                    {/* </li> */}
 
                     {isAuthenticated ? authLinks() : guestLinks()}
 

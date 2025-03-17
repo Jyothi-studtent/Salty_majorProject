@@ -444,7 +444,15 @@ def filters_function(request):
         if projectid == 'allprojects':
                 issues = list(base_query.filter(assignee=current_user).values())
         else:
-            if filter_type == 'all_issues':
+            if filter_type == 'complete_issues':
+                completed_sprints = Sprint.objects.filter(status="completed")
+
+        
+                issues_query = issue.objects.filter(sprint__in=completed_sprints)
+
+
+                issues = list(issues_query.values())
+            elif filter_type == 'all_issues':
                 issues = list(base_query.filter(projectId_id=projectid).values())  
             elif filter_type == 'assigned_to_me':
                 issues = list(base_query.filter(projectId_id=projectid, assignee=current_user).values())

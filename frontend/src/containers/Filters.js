@@ -69,20 +69,20 @@ const Filters = ({ isAuthenticated, user, isSidebarCollapsed }) => {
     setIsPopupOpen(false);
   };
 
-  const fetchUserProjects = async () => {
-    try {
-      const response = await axios.get(`http://localhost:8000/djapp/filters_function/`, {
-        params: {
-          filter: 'my_issues',
-          currentUser: currentUser
-        }
-      });
-      setProjects(response.data);
-    } catch (error) {
-      console.error("Error fetching projects:", error);
-      alert("Error fetching projects.");
-    }
-  };
+  // const fetchCompletedIssues = async () => {
+  //   try {
+  //     const response = await axios.get(`http://localhost:8000/djapp/filters_function/`, {
+  //       params: {
+  //         filter: 'my_issues',
+  //         currentUser: currentUser
+  //       }
+  //     });
+  //     setProjects(response.data);
+  //   } catch (error) {
+  //     console.error("Error fetching projects:", error);
+  //     alert("Error fetching projects.");
+  //   }
+  // };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -124,13 +124,14 @@ const Filters = ({ isAuthenticated, user, isSidebarCollapsed }) => {
             className='project-dropdown'
             onChange={(e) => {
               setSelectedFilter(e.target.value);
-              if (e.target.value !== 'Status' && e.target.value !== 'my_issues') {
+              if (e.target.value !== 'Status' && e.target.value !== 'complete_issues') {
                 setStatusFilter('');
                 setSelectedProject('');
               }
-              if (e.target.value === 'my_issues') {
-                fetchUserProjects();
-              }
+              // if (e.target.value === 'complete_issues') {
+              //   fetchCompletedIssues()
+               
+              // }
             }}
           >
             <option value="">Select Filter</option>
@@ -138,9 +139,9 @@ const Filters = ({ isAuthenticated, user, isSidebarCollapsed }) => {
             <option value="assigned_to_me">Assigned to me</option>
             <option value="Status">Status</option>
             <option value="unassigned">Unassigned</option>
-            <option value="my_issues">My Issues</option>
+            <option value="complete_issues">completed Issues</option>
           </select>
-
+{/* 
           {selectedFilter === 'my_issues' && projects.length > 0 && (
             <select
               value={selectedProject}
@@ -152,7 +153,7 @@ const Filters = ({ isAuthenticated, user, isSidebarCollapsed }) => {
                 <option key={project.id} value={project.id}>{project.name}</option>
               ))}
             </select>
-          )}
+          )} */}
 
 
           {selectedFilter === 'Status' && (

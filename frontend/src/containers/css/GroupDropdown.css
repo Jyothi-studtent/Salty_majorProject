@@ -1,0 +1,126 @@
+/* General dropdown styling */
+.custom-dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+/* Dropdown Toggle (Button) */
+.custom-dropdown-toggle {
+    background-color: #bd055e;
+    color: #fff;
+    border: none;
+    padding: 10px 15px;
+    font-size: 14px;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 500;
+    outline: none;
+    
+}
+
+.custom-dropdown-toggle:hover {
+    background-color: #bd055e;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.custom-dropdown-toggle:focus {
+    outline: none;
+}
+
+/* Dropdown menu */
+.custom-dropdown-menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 220px;
+    background-color: #fff;
+    border-radius: 6px;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+    padding: 8px 0;
+    margin-top: 5px;
+    list-style: none;
+    z-index: 1000;
+    opacity: 0;
+    transform: translateY(10px);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    pointer-events: none;
+    border: 1px solid #ddd;
+}
+
+/* Show dropdown when state is open */
+.custom-dropdown-menu.show {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: all;
+}
+
+/* Dropdown Items */
+.custom-dropdown-item {
+    padding: 12px 16px;
+    color: #333;
+    font-size: 14px;
+    font-weight: 400;
+    text-decoration: none;
+    display: block;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    border-radius: 4px;
+    border-bottom: 1px solid #f1f1f1;
+    text-align: left;
+    width: 100%;
+    background: none;
+    border: none;
+    
+    cursor: pointer;
+}
+
+.custom-dropdown-item:hover {
+    background-color: #f8f9fa;
+    color: #bd055e;
+}
+
+/* Remove border from last item */
+.custom-dropdown-item:last-child {
+    border-bottom: none;
+}
+
+/* Divider */
+.custom-dropdown-divider {
+    border-top: 1px solid #e0e0e0;
+    margin: 6px 0;
+}
+
+/* Error message styling */
+.custom-text-danger {
+    color: #dc3545;
+    font-size: 12px;
+    padding: 8px 16px;
+    display: block;
+}
+
+/* Dropdown Icon */
+.dropdown-icon {
+    width: 16px;
+    height: 16px;
+    transition: transform 0.3s ease;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .custom-dropdown-toggle {
+        font-size: 13px;
+        padding: 8px 12px;
+    }
+
+    .custom-dropdown-menu {
+        width: 180px;
+    }
+
+    .custom-dropdown-item {
+        font-size: 13px;
+        padding: 10px 12px;
+    }
+}

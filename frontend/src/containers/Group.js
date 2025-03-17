@@ -4,6 +4,7 @@ import axios from 'axios';
 import CreateGroup from './Create_group';
 import GroupList from './Group_list';
 import './css/project.css';
+import GroupDropdown from './GroupDropdown';
 
 const Home = ({ user }) => {
   const [isAdmin_Staff, setIsAdmin_Staff] = useState(false);
@@ -43,6 +44,7 @@ const Home = ({ user }) => {
       {console.log(isAdmin_Staff)}
       {isAdmin_Staff ? <CreateGroup onGroupCreated={refreshGroupList} /> : <></>}
       <GroupList refreshFlag={refreshFlag} />
+     
     </div>
   );
 };

@@ -7,6 +7,7 @@ import './css/navbar.css';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
 import IssueForm from '../containers/IssueForm';
+import GroupDropdown from '../containers/GroupDropdown'; 
 
 const Navbar = ({ logout, isAuthenticated, user }) => {
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -15,31 +16,24 @@ const Navbar = ({ logout, isAuthenticated, user }) => {
     const navigate = useNavigate();
     const { group_id, projectid } = useParams();
     const [formOpen, setFormOpen] = useState(false);
-  
 
     useEffect(() => {
         if (user) {
             const fetchProjects = async () => {
                 try {
                     const response = await axios.get(`http://localhost:8000/djapp/project_list/?email=${user.email}&group_id=${group_id}`);
-                    // const response = await axios.get('http://localhost:8000/djapp/project_list/', {
-                    //     params: { email: user.email, group_id: group_id  }
-                    // });
                     setProjects(response.data);
                 } catch (error) {
                     console.error('Error fetching projects:', error);
                     let errorMessage = "There was an error fetching the data!";
-
-        if (error.response) {
-            errorMessage = error.response.data.error || "Something went wrong.";
-        } else if (error.request) {
-            errorMessage = "No response from server. Check your internet connection.";
-        }
-  
-        alert(errorMessage);
+                    if (error.response) {
+                        errorMessage = error.response.data.error || "Something went wrong.";
+                    } else if (error.request) {
+                        errorMessage = "No response from server. Check your internet connection.";
+                    }
+                    alert(errorMessage);
                 }
             };
-
             fetchProjects();
         }
     }, [user]);
@@ -50,34 +44,24 @@ const Navbar = ({ logout, isAuthenticated, user }) => {
                 setIsDropdownOpen(false);
             }
         };
-
         document.addEventListener("mousedown", handleClickOutside);
-
         return () => {
             document.removeEventListener("mousedown", handleClickOutside);
         };
     }, []);
 
-    const toggleDropdown = () => {
-        setIsDropdownOpen(!isDropdownOpen);
-    };
-
     const logoutUser = () => {
         logout();
-        navigate('/'); 
+        navigate('/');
     };
 
     const guestLinks = () => (
         <Fragment>
             <li className='nav-item'>
-                <Link className='nav-link' to='/login'>
-                    Login
-                </Link>
+                <Link className='nav-link' to='/login'>Login</Link>
             </li>
             <li className='nav-item'>
-                <Link className='nav-link' to='/signup'>
-                    Sign Up
-                </Link>
+                <Link className='nav-link' to='/signup'>Sign Up</Link>
             </li>
         </Fragment>
     );
@@ -85,9 +69,7 @@ const Navbar = ({ logout, isAuthenticated, user }) => {
     const authLinks = () => (
         <Fragment>
             <li className='nav-item'>
-                <a className='nav-link' href='#!' onClick={logoutUser}>
-                    Logout
-                </a>
+                <a className='nav-link' href='#!' onClick={logoutUser}>Logout</a>
             </li>
         </Fragment>
     );
@@ -96,28 +78,10 @@ const Navbar = ({ logout, isAuthenticated, user }) => {
         navigate(`/group/${group_id}/project/${projectid}/profile`);
     };
 
-    const openMyIssues = () => {
-        navigate(`/group/${group_id}/project/${projectid}/filters`);
-    };
-
-    const openViewAllProjects = () => {
-        navigate(`/group/${group_id}/project`, { replace: true }); 
-        window.location.reload();
-    };
-
-    const openForm = () => {
-        setFormOpen(true);
-    };
-
-    const closeForm = () => {
-        setFormOpen(false);
-    };
-
-    // Determine user role based on is_admin, is_staff, and is_active
     const getUserRole = () => {
-        if (user?.is_admin && user?.is_staff && user?.is_active) return "Admin"; // SUPERUSER
-        if (user?.is_staff && user?.is_active) return "Teacher (Group Head/Guide)"; // TEACHER
-        if (user?.is_active) return "Developer"; // DEVELOPER
+        if (user?.is_admin && user?.is_staff && user?.is_active) return "Admin";
+        if (user?.is_staff && user?.is_active) return "Teacher (Group Head/Guide)";
+        if (user?.is_active) return "Developer";
         return "Unknown";
     };
 
@@ -125,35 +89,24 @@ const Navbar = ({ logout, isAuthenticated, user }) => {
         <Fragment>
             <nav className='nav-container'>
                 <ul className='nav-list'>
-                    <li className='nav-item'>
+                    <li className='nav-item nav-logo-container'>
                         <button className='nav-button'>Salty</button>
-                    </li>
-                    <li className='nav-item'>
-                        <button className='nav-button' onClick={toggleDropdown}>Project</button>
-                        {isDropdownOpen && (
-                            <ul className='dropdown' ref={dropdownRef}>
-                                {projects.map(project => (
-                                    <li key={project.projectid}>
-                                        <Link to={`/group/${project.group_id}/project/${project.projectid}/backlog`} className='dropdown-item'>{project.projectname}</Link>
-                                    </li>
-                                ))}
-                            </ul>
-                        )}
+                        {isAuthenticated && <GroupDropdown />} {/* ✅ Show GroupDropdown only when logged in */}
                     </li>
 
                     {isAuthenticated ? authLinks() : guestLinks()}
 
                     {isAuthenticated && (
                         <Fragment>
-                            <button className='nav-button-create' onClick={openForm}>Create Issue</button>
+                            <button className='nav-button-create' onClick={() => setFormOpen(true)}>Create Issue</button>
                         </Fragment>
                     )}
 
                     {formOpen && (
                         <div className="modal">
                             <div className="modal-content">
-                                <span className="close" onClick={closeForm}>&times;</span>
-                                <IssueForm onClose={closeForm} />
+                                <span className="close" onClick={() => setFormOpen(false)}>&times;</span>
+                                <IssueForm onClose={() => setFormOpen(false)} />
                             </div>
                         </div>
                     )}
@@ -162,7 +115,7 @@ const Navbar = ({ logout, isAuthenticated, user }) => {
                 {isAuthenticated && user && (
                     <ul className='nav-list'>
                         <li className='nav-item'>
-                            <p className='admin_user'>{getUserRole()}</p> {/* Display role dynamically */}
+                            <p className='admin_user'>{getUserRole()}</p>
                         </li>
                     </ul>
                 )}
@@ -174,7 +127,6 @@ const Navbar = ({ logout, isAuthenticated, user }) => {
                         </li>
                     </ul>
                 )}
-
             </nav>
         </Fragment>
     );

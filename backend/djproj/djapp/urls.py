@@ -61,4 +61,8 @@ urlpatterns = [
     path('<str:group_id>/next-project-id', get_next_project_id, name='get_next_project_id'),
  path('api/update_project_name/<str:project_id>/', views.update_project_name),
 
+    path('delete_file/', delete_file, name='delete_file'),
+    path('get_csrf_token/', get_csrf_token, name='get_csrf_token'),
+    # path('get_completed_Sprints/', get_completed_Sprints, name='get_completed_Sprints'),
+    path('create_compulsory_issue/', create_compulsory_issue, name='create_compulsory_issue' ),
 ]

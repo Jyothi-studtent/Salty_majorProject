@@ -56,4 +56,8 @@ urlpatterns = [
     path('list_projects_user_is_part_of/', list_projects_user_is_part_of, name='list_projects_user_is_part_of'),
     path('upload_file/', upload_file, name='upload_file'),
     path('files/', list_files, name='list_files'),
+    path('delete_file/', delete_file, name='delete_file'),
+    path('get_csrf_token/', get_csrf_token, name='get_csrf_token'),
+    # path('get_completed_Sprints/', get_completed_Sprints, name='get_completed_Sprints'),
+    path('create_compulsory_issue/', create_compulsory_issue, name='create_compulsory_issue' ),
 ]

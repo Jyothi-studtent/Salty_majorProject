@@ -1,0 +1,19 @@
+Document Evaluation has 3 parts:
+
+part 1:
+	format checking ---- font size, citations, subheading, page numbs, abstract 
+			---- use python-docs and pdf-plumber
+
+part 2:
+	plag and ai content check ----- api calls, Turnitin, 
+
+part 3:
+	content quality eval:
+		one follow a standard:
+			use case diagrams, 
+			
+		process it through llm to check relevance of content 
+
+
+Cloud SetUp:---
+	

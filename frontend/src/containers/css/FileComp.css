@@ -85,3 +85,25 @@ h3 {
     font-size: 0.8rem; /* Smaller message text */
     color: #333;
 }
+
+.delete-btn {
+    background: red;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+.delete-btn:hover {
+    background: darkred;
+}
+
+.file-upload-container {
+    margin-top: 15px;
+}
+
+.message {
+    margin-top: 10px;
+    color: green;
+}

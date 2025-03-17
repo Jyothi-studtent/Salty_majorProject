@@ -138,12 +138,12 @@ class Sprint(models.Model):
     project = models.ForeignKey(Project, on_delete=models.SET_NULL, null=True, blank=True)
     
 
-
+from django.utils import timezone
 class issue(models.Model):
     IssueName = models.CharField(max_length=30,default="",unique=False)
     issue_id = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
     sprint = models.ForeignKey(Sprint, on_delete=models.SET_NULL, null=True, blank=True,default="null")
-    projectId = models.ForeignKey(Project, on_delete=models.SET_NULL, null=True, blank=True,default="null")
+    projectId = models.ForeignKey(Project, on_delete=models.SET_NULL, null=True, blank=True)
     IssueType=models.CharField(max_length=30,default="")
     status=models.CharField(max_length=30,default="To-Do")
     assignee=models.CharField(max_length=30,default="",null=True)
@@ -152,6 +152,8 @@ class issue(models.Model):
     file_field = models.FileField(upload_to='uploads/', default='default_file.txt')
     StoryPoint = models.IntegerField(default=1)
     Priority = models.CharField(max_length=30,default="")
+    IsCompulsory = models.BooleanField(default=False)
+    Deadline = models.DateField(null=True, blank=True, default=None)
     class Meta:
         unique_together = ("projectId", "IssueName")
     def __str__(self):

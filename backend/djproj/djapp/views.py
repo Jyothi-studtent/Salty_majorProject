@@ -72,7 +72,8 @@ def add_issue(request):
     else:
         return JsonResponse({'success': False, 'message': 'Invalid request method'})
 
-
+def get_csrf_token(request):
+    return JsonResponse({"csrfToken": get_token(request)})
 
 @csrf_exempt
 def create_group(request):
@@ -430,6 +431,12 @@ def create_issue(request):
 
 import traceback  # For detailed exception traceback
 
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+from django.db.models import Q
+
+from django.db.models import F
+
 @csrf_exempt
 def filters_function(request):
     if request.method == 'GET':
@@ -437,12 +444,24 @@ def filters_function(request):
         filter_type = request.GET.get('filter')
         status = request.GET.get('status')
         current_user = request.GET.get('currentUser')
+
         if not projectid:
             return JsonResponse({"error": "Project ID is required"}, status=400)
-        issues = []
-        base_query = issue.objects.exclude(sprint__status='completed')
-        if projectid == 'allprojects':
-                issues = list(base_query.filter(assignee=current_user).values())
+
+        # Exclude issues from completed sprints
+        base_query = issue.objects.exclude(sprint__status='completed').annotate(sprint_status=F('sprint__status'))
+
+        if filter_type == 'all_issues':
+            issues = list(base_query.filter(projectId_id=projectid).values())
+        elif filter_type == 'assigned_to_me':
+            issues = list(base_query.filter(projectId_id=projectid, assignee=current_user).values())
+        elif filter_type == 'unassigned':
+            issues = list(base_query.filter(projectId_id=projectid, assignee='').values())
+        elif filter_type == 'complete_sprint_issue':
+            completed_sprints = Sprint.objects.filter(project__projectid=projectid, status='completed').values_list('id', flat=True)
+            issues = list(issue.objects.filter(sprint_id__in=completed_sprints).annotate(sprint_status=F('sprint__status')).values())
+        elif filter_type == 'Status':
+            issues = list(base_query.filter(projectId_id=projectid, status=status).values())
         else:
             if filter_type == 'complete_issues':
                 completed_sprints = Sprint.objects.filter(status="completed")
@@ -480,22 +499,25 @@ def update_issue(request):
             issue_obj.status = data.get('status', issue_obj.status)
             issue_obj.assignee = data.get('assignee', issue_obj.assignee)
             issue_obj.assigned_by = data.get('assigned_by', issue_obj.assigned_by)
-           
             issue_obj.sprint_id = data.get('sprint_id', issue_obj.sprint_id)
             issue_obj.projectId_id = data.get('projectId_id', issue_obj.projectId_id)
             issue_obj.file_field = data.get('file_field', issue_obj.file_field)
+            issue_obj.Priority = data.get('Priority', issue_obj.Priority)
             story_point = data.get('StoryPoint')
             if story_point is not None:
                 try:
                     issue_obj.StoryPoint = int(story_point)
                 except ValueError:
                     return JsonResponse({'status': 'error', 'message': 'StoryPoint must be a number'})
-            
+
             issue_obj.save()
             return JsonResponse({'status': 'success'})
+        
         except issue.DoesNotExist:
             return JsonResponse({'status': 'error', 'message': 'Issue not found'})
+    
     return JsonResponse({'status': 'error', 'message': 'Invalid request method'})
+
 
 from datetime import datetime
 from django.shortcuts import get_object_or_404
@@ -630,6 +652,7 @@ def countsprints(request):
             return JsonResponse({"error": "Project ID is required"}, status=400)
     else:
         return JsonResponse({"error": "Only GET requests are allowed"}, status=405)
+    
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 @csrf_exempt
@@ -1070,6 +1093,28 @@ def list_projects_user_is_part_of(request):
     else:
         return JsonResponse({'error': 'Only GET requests are allowed'}, status=405)
   
+from django.views.decorators.csrf import csrf_exempt
+from django.http import JsonResponse
+from django.shortcuts import get_object_or_404
+from djapp.models import UploadedFile
+from django.views.decorators.http import require_http_methods
+from django.middleware.csrf import get_token
+
+@csrf_exempt
+@require_http_methods(["DELETE"])
+def delete_file(request, file_id):
+    if request.method != "DELETE":
+        return JsonResponse({'error': 'Invalid request method'}, status=405)
+
+    file_obj = get_object_or_404(UploadedFile, id=file_id)
+
+    # Delete the file from storage
+    file_obj.file.delete(save=False)  # Removes the file from storage
+
+    # Delete the database entry
+    file_obj.delete()
+
+    return JsonResponse({'message': 'File deleted successfully!'}, status=200)
 
 
 def list_files(request):
@@ -1159,4 +1204,82 @@ def get_group_members(request):
     members = GroupMember.objects.filter(group__group_id=group_id).values('member_email')
 
     return JsonResponse(list(members), safe=False)
+
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+import json
+from .models import issue, Project  # Ensure you import the correct models
+@csrf_exempt
+def create_compulsory_issue(request):
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)  # Parse JSON data from the request
+            print("Received data:", data)  # Debugging: Print the entire payload
+
+            issue_name = data.get('issue_name')
+            description = data.get('description')
+            story_points = data.get('story_points', 1)
+            priority = data.get('priority', 'Medium')
+            deadline = data.get('deadline', None)
+            sprint =  None
+            projects = data.get('projects', [])  # List of project IDs
+            assigned_by = data.get('assigned_by', '')  # Email of the user creating the issue
+
+            if not issue_name or not description or not projects:
+                return JsonResponse({'error': 'Issue name, description, and projects are required'}, status=400)
+
+            created_issues = []
+
+            for project_id in projects:
+                try:
+                    # Fetch the project
+                    print(f"Fetching project with ID: {project_id}")  # Debugging: Print project ID
+                    project = Project.objects.get(projectid=project_id)
+                    print(f"Found project: {project.projectid}")  # Debugging: Confirm project exists
+
+                    # Create the issue for the project
+                    new_issue = issue.objects.create(
+                        IssueName=issue_name,
+                        description=description,
+                        StoryPoint=story_points,
+                        Priority=priority,
+                        Deadline=deadline,
+                        projectId=project,  # Pass the Project object directly
+                        assigned_by=assigned_by,
+                        status='To-Do',
+                        sprint=sprint,
+                        IsCompulsory=True,  # Mark the issue as compulsory
+                    )
+                    created_issues.append({
+                        'issue_id': str(new_issue.issue_id),
+                        'project_id': project_id,
+                    })
+                except Project.DoesNotExist:
+                    print(f"Project with ID {project_id} does not exist")  # Debugging: Project not found
+                    return JsonResponse({'error': f'Project with ID {project_id} does not exist'}, status=400)
+                except Exception as e:
+                    print(f"Error creating issue for project {project_id}: {e}")  # Debugging: Catch any other errors
+                    return JsonResponse({'error': str(e)}, status=500)
+
+            return JsonResponse({
+                'message': 'Compulsory issues created successfully',
+                'issues': created_issues,
+            }, status=201)
+        except json.JSONDecodeError:
+            return JsonResponse({'error': 'Invalid JSON'}, status=400)
+        except Exception as e:
+            print(f"Unexpected error: {e}")  # Debugging: Catch any unexpected errors
+            return JsonResponse({'error': str(e)}, status=500)
+    else:
+        return JsonResponse({'error': 'Only POST method allowed'}, status=405)
+
+
+
+
+
+
+
+
+
+
 

@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import axios from 'axios';
 import Create_project from './Create_project';
 import Project_list from './Project_list';
+
 import './css/project.css';
 
 const Home = ({ user }) => {

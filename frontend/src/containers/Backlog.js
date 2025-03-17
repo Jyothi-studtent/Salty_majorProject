@@ -454,7 +454,8 @@ const token = useSelector((state) => state.auth.access);
            </div>
        
         <div id="deleteIssue" className="Dropdown" onClick={handleDeleteIssue}>
-          <FaRegTrashAlt />
+        <FaRegTrashAlt size={16} />
+
         </div>
       </div>
       {showPopup && (

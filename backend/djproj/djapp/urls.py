@@ -1,6 +1,6 @@
 from django.urls import path
 from .views import *
-
+from . import views
 urlpatterns = [
     path('create_group/', create_group, name='create_group'),
    path('create/', create_project, name='create_project'),
@@ -53,4 +53,12 @@ urlpatterns = [
     path('files/', list_files, name='list_files'),
     path('invite_project_members/', invite_project_members, name='invite_project_members'),
     path('accept_invite/', accept_invite, name='accept_invite'),
+    path('csrf/', get_csrf_token, name='get-csrf-token'),
+    path('confirm_accept_invite/', confirm_accept_invite, name='confirm_accept_invite'),
+    path('project_members/<str:projectid>/', get_project_members, name='get_project_members'),
+    path('get_all_group_ids/', get_all_group_ids, name='get_all_group_ids'),
+    path('get_all_projects/', get_all_projects, name='get_all_projects'),
+    path('<str:group_id>/next-project-id', get_next_project_id, name='get_next_project_id'),
+ path('api/update_project_name/<str:project_id>/', views.update_project_name),
+
 ]

@@ -2,7 +2,7 @@ import { GiSprint } from "react-icons/gi";
 
 import Backlog from './Backlog';
 import React, { useState , useEffect} from 'react';
-import { useLocation, useParams } from 'react-router-dom';
+import { useLocation, useParams,useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Sprint from './Sprint';
 import IssueForm from './IssueForm';
@@ -16,7 +16,8 @@ import ProjectPage from "./ProjectPage";
 
 export default function DisplayBacklog() {
    
-    const {projectid}=useParams()
+  const { projectid, group_id } = useParams(); 
+  const navigate = useNavigate(); 
     const [renderFlag, setRenderFlag] = useState(false);
     const [sprints, setSprints] = useState([]);
     const [issues, setissues] = useState([]);
@@ -66,6 +67,9 @@ export default function DisplayBacklog() {
       }
     };
    
+
+
+
     useEffect(() => {
       fetchData();
     }, [deletedSprint, sprintCount, isSprintDeleted,renderFlag]);
@@ -90,7 +94,9 @@ export default function DisplayBacklog() {
           }
         };fetchIssues();
       }, [projectid,issueStatusChanged]);
-   
+
+
+
       const handleCreateSprint = async () => {
         try {
           const sprintName = `Sprint ${sprintCount + 1}-${projectid.substring(0, 4)}`;

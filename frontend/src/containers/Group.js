@@ -39,7 +39,7 @@ const Home = ({ user }) => {
   };
 
   return (
-    <div className='project'>
+    <div className='group'>
       {console.log(isAdmin_Staff)}
       {isAdmin_Staff ? <CreateGroup onGroupCreated={refreshGroupList} /> : <></>}
       <GroupList refreshFlag={refreshFlag} />

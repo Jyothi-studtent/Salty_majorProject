@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUserPlus } from '@fortawesome/free-solid-svg-icons';
 import Add_project_members from './Add_project_members'; // Import the component
+import './css/project_dashboard.css';
 
 const ProjectDashboard = ({ group }) => {
     const [showForm, setShowForm] = useState(false);

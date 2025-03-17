@@ -109,6 +109,7 @@ def create_group(request):
 
 
 @csrf_exempt
+
 def group_list(request):
     if request.method == 'GET':
         email = request.GET.get('email', None)
@@ -120,17 +121,25 @@ def group_list(request):
         except UserAccount.DoesNotExist:
             return JsonResponse({'error': 'User does not exist'}, status=404)
         
+        # ✅ If the user is an admin, return all groups
         if user.is_admin:
             groups = Group.objects.all()
         else:
-            # Retrieve groups where the email matches the group head
+            # ✅ 1. Groups where the user is the group head
             groups_head = Group.objects.filter(group_head=email)
-            # Retrieve groups where the email matches a group member
-            groups_member = GroupMember.objects.filter(member_email=email).values('group')
-            # Combine both lists of groups
-            groups = list(groups_head) + list(Group.objects.filter(pk__in=groups_member))
-        
-        # Create a list of group data including group head information
+
+            # ✅ 2. Groups where the user is a direct group member
+            group_membership_ids = GroupMember.objects.filter(member_email=email).values_list('group', flat=True)
+            groups_member = Group.objects.filter(group_id__in=group_membership_ids)
+
+            # ✅ 3. Groups where the user is in a project team
+            project_groups_ids = Project_TeamMember.objects.filter(team_member_email=email).values_list('project__group', flat=True)
+            groups_project_member = Group.objects.filter(group_id__in=project_groups_ids)
+
+            # ✅ Combine all groups and remove duplicates
+            groups = set(groups_head) | set(groups_member) | set(groups_project_member)
+
+        # ✅ Create a list of group data including group head information
         group_data = [
             {
                 'group_id': group.group_id,
@@ -139,9 +148,11 @@ def group_list(request):
             } 
             for group in groups
         ]
+
         return JsonResponse(group_data, safe=False)
-    else:
-        return JsonResponse({'error': 'Only GET requests are allowed'}, status=405)
+
+    return JsonResponse({'error': 'Only GET requests are allowed'}, status=405)
+
 
 
 @csrf_exempt
@@ -177,7 +188,6 @@ def invite_group_members(request):
     return JsonResponse({'error': 'Only POST requests allowed'}, status=405)
 
 
-
 @csrf_exempt
 def create_project(request):
     if request.method == 'POST':
@@ -185,10 +195,9 @@ def create_project(request):
             data = json.loads(request.body)
             project_name = data.get('projectname')
             teamlead = data.get('teamlead')
-            projectid = data.get('projectid')
             group_id = data.get('group_id')  # Get group ID from request
 
-            if not project_name or not projectid or not teamlead:
+            if not project_name or not teamlead:
                 return JsonResponse({'error': 'Missing required fields'}, status=400)
 
             # Ensure group_id is valid
@@ -198,6 +207,12 @@ def create_project(request):
                     group = Group.objects.get(group_id=group_id)
                 except Group.DoesNotExist:
                     return JsonResponse({'error': 'Invalid group ID'}, status=400)
+
+            # Count the number of existing projects in the group
+            existing_projects_count = Project.objects.filter(group=group).count()
+
+            # Generate projectid in the format 'group_id-team{existing_projects_count + 1}'
+            projectid = f"{group_id}-team{existing_projects_count + 1}"
 
             # Create project and assign to group
             project = Project(
@@ -221,6 +236,27 @@ def create_project(request):
             return JsonResponse({'error': 'Invalid JSON data'}, status=400)
     else:
         return JsonResponse({'error': 'Only POST requests are allowed'}, status=405)
+
+
+
+@csrf_exempt
+def get_next_project_id(request, group_id):
+    try:
+        # Ensure the group_id is valid
+        group = Group.objects.get(group_id=group_id)
+
+        # Count the number of existing projects in the group
+        existing_projects_count = Project.objects.filter(group=group).count()
+
+        # Generate the next projectid in the format 'group_id-team{existing_projects_count + 1}'
+        projectid = f"{group_id}-team{existing_projects_count + 1}"
+
+        # Return the projectid as a response
+        return JsonResponse({'projectid': projectid}, status=200)
+
+    except Group.DoesNotExist:
+        return JsonResponse({'error': 'Invalid group ID'}, status=400)
+
 
 @csrf_exempt
 def csrf_token(request):
@@ -1084,59 +1120,177 @@ def get_group_members(request):
 
     return JsonResponse(list(members), safe=False)
 
+from django.core import signing
+from django.conf import settings
+
+
+@csrf_exempt
 def invite_project_members(request):
     if request.method == 'POST':
-        data = request.json()
-        project_id = data.get('project_id')
-        emails = data.get('emails')
+        try:
+            data = json.loads(request.body)
+            project_id = data.get('project_id')
+            emails = data.get('emails')
 
-        project = get_object_or_404(Project, projectid=project_id)
-        group = project.group
+            project = get_object_or_404(Project, projectid=project_id)
 
-        invitations = []
-        for email in emails:
-            token = get_random_string(32)  # Generate a unique token
-            invitation = GroupInvitation.objects.create(
-                group=group,
-                invitee_email=email,
-                token=token,
-                is_accepted=False
-            )
-            invitations.append(invitation)
+            for email in emails:
+                # Generate a secure token (serialize project_id and email)
+                token = signing.dumps({"email": email, "project_id": project_id}, salt=settings.SECRET_KEY)
 
-            # Generate join link
-            join_url = f"http://localhost:3000/join-project/{token}"  # Adjust based on frontend route
+                # Generate join link
+                join_url = f"http://localhost:3000/join-project/{token}"  # Adjust for frontend
 
-            # Send Email
-            send_mail(
-                subject="Project Invitation",
-                message=f"You have been invited to join the project '{project.projectname}'. Click here to join: {join_url}",
-                from_email="your-email@example.com",
-                recipient_list=[email],
-                fail_silently=False,
-            )
+                # Send Email
+                send_mail(
+                    subject="Project Invitation",
+                    message=f"You have been invited to join the project '{project.projectname}'. Click here to join: {join_url}",
+                    from_email=EMAIL_HOST_USER,
+                    recipient_list=[email],
+                    fail_silently=False,
+                )
 
-        return JsonResponse({"message": "Invitations sent successfully!"}, status=200)
-    return JsonResponse({"error": "Invalid request"}, status=400)
+            return JsonResponse({"message": "Invitations sent successfully!"}, status=200)
+        except Exception as e:
+            return JsonResponse({"error": str(e)}, status=500)
 
+    return JsonResponse({"error": "Invalid request method"}, status=400)
 
+def get_csrf_token(request):
+    return JsonResponse({'csrfToken': get_token(request)})
+
+User = get_user_model()  # ✅ Get the User model
+@csrf_exempt
 def accept_invite(request):
+    """Handles the invitation check & redirects user accordingly."""
     if request.method == 'POST':
-        data = request.json()
-        token = data.get('token')
+        try:
+            data = json.loads(request.body)  
+            token = data.get('token')  
 
-        invitation = get_object_or_404(GroupInvitation, token=token, is_accepted=False)
-        
-        # Add user to project team
-        Project_TeamMember.objects.create(
-            project=Project.objects.get(group=invitation.group),
-            team_member_email=invitation.invitee_email
-        )
+            if not token:
+                return JsonResponse({"error": "Missing token"}, status=400)
 
-        # Mark invitation as accepted
-        invitation.is_accepted = True
-        invitation.save()
+            try:
+                decoded_data = signing.loads(token, salt=settings.SECRET_KEY)
+                email = decoded_data.get("email")
+                project_id = decoded_data.get("project_id")
+            except signing.BadSignature:
+                return JsonResponse({"error": "Invalid or expired token"}, status=400)
 
-        return JsonResponse({"message": "You have successfully joined the project!"}, status=200)
+            user_exists = User.objects.filter(email=email).exists()
+
+            if not user_exists:
+                return JsonResponse({"redirect": "/signup", "message": "Please sign up to join the project."}, status=200)
+
+            return JsonResponse({
+                "redirect": f"/accept-invitation?email={email}&project_id={project_id}",  
+                "message": "Click Accept to join the project."
+            }, status=200)
+
+        except Exception as e:
+            return JsonResponse({"error": str(e)}, status=500)
+
+    return JsonResponse({"error": "Invalid request method"}, status=400)
+
+
+
+@csrf_exempt  # ⛔ Temporarily disable CSRF protection
+def confirm_accept_invite(request):
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            print("Received data:", data)
+            email = data.get('email')
+            project_id = data.get('project_id')
+
+            if not email or not project_id:
+                return JsonResponse({"error": "Missing email or project_id"}, status=400)
+
+            project = get_object_or_404(Project, projectid=project_id)
+
+            already_member = Project_TeamMember.objects.filter(project=project, team_member_email=email).exists()
+            if already_member:
+                return JsonResponse({"message": "You are already a member of this project!"}, status=200)
+
+            Project_TeamMember.objects.create(
+                project=project,
+                team_member_email=email
+            )
+
+            return JsonResponse({"message": "Successfully joined the project!"}, status=200)
+
+        except Exception as e:
+            print("Error in confirm_accept_invite:", str(e))
+            return JsonResponse({"error": str(e)}, status=500)
+
+    return JsonResponse({"error": "Invalid request method"}, status=400)
+
+
+def get_project_members(request, projectid):
+    """Returns the list of emails of members in the project."""
+    project = get_object_or_404(Project, projectid=projectid)
+    members = Project_TeamMember.objects.filter(project=project).values_list('team_member_email', flat=True)
     
-    return JsonResponse({"error": "Invalid request"}, status=400)
+    return JsonResponse({"members": list(members)})
+
+def get_all_group_ids(request):
+    """Fetch all existing group IDs from the database."""
+    try:
+        group_ids = list(Group.objects.values_list('groupid', flat=True))  # Get list of all groupid
+        return JsonResponse({'group_ids': group_ids}, safe=False)
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=500)
+    
+ 
+
+def get_all_projects(request):
+    group_id = request.GET.get('group_id')  # Extract the group_id from the request parameters
+
+    if group_id:
+        # Filter projects by the group_id
+        projects = Project.objects.filter(group__id=group_id)
+    
+    project_data = []
+    for project in projects:
+        project_data.append({
+            'projectid': project.projectid,
+            'projectname': project.projectname,
+            'teamlead_email': project.teamlead_email,
+            'group_id': project.group.id if project.group else None,
+        })
+
+    return JsonResponse(project_data, safe=False)
+
+
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+from .models import Project
+import json
+
+@csrf_exempt
+def update_project_name(request, project_id):
+    if request.method == 'PATCH':
+        try:
+            data = json.loads(request.body)
+            new_project_name = data.get('projectname', '')
+
+            if not new_project_name:
+                return JsonResponse({'message': 'Project name is required'}, status=400)
+
+            # Find the project by project_id
+            project = Project.objects.get(projectid=project_id)
+
+            # Update project name
+            project.projectname = new_project_name
+            project.save()
+
+            return JsonResponse({'message': 'Project name updated successfully'}, status=200)
+
+        except Project.DoesNotExist:
+            return JsonResponse({'message': 'Project not found'}, status=404)
+
+        except Exception as e:
+            return JsonResponse({'message': str(e)}, status=500)
+
+    return JsonResponse({'message': 'Invalid request method'}, status=405)

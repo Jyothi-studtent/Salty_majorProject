@@ -52,7 +52,7 @@ const GroupList = ({ user, clickGroup, refreshFlag }) => {
 
     return (
         <>
-            <h2>Groups</h2>
+            <h2 style={{ marginTop: '-60px', marginLeft:"40px" }}>Groups</h2> 
             <div className="projectListContainer">
                 <table className="projectListTable">
                     <thead>

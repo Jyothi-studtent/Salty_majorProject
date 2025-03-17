@@ -4,59 +4,79 @@ import { useNavigate, useParams } from 'react-router-dom'; // Import useParams
 import { createProject } from '../actions/auth';
 import './css/create_project.css';
 
-const Project = ({ isAuthenticated, user, createProject, project }) => {
+const Project = ({ isAuthenticated, user, createProject, project, setProjects }) => {
     const [showForm, setShowForm] = useState(false);
     const [projectName, setProjectName] = useState('');
-    const [projectId, setProjectId] = useState('');
+    const [projectId, setProjectId] = useState(''); // Store the project ID here
     const navigate = useNavigate();
     const { group_id } = useParams(); // Extract group_id from the URL path
 
-    const generateProjectId = (name) => {
-        return name.slice(0, 4).toUpperCase();
+    // Function to fetch the next available project ID
+    const fetchProjectId = async () => {
+        try {
+            const response = await fetch(`http://localhost:8000/djapp/${group_id}/next-project-id`);
+            const data = await response.json();
+            if (data.projectid) {
+                setProjectId(data.projectid); // Set the next project ID
+            }
+        } catch (error) {
+            console.error('Error fetching project ID:', error);
+        }
+    };
+
+    // Trigger fetching of project ID when the form opens
+    const handleFormOpen = () => {
+        setShowForm(true);
+        fetchProjectId(); // Fetch the project ID when the form opens
     };
 
     const handleProjectNameChange = (e) => {
         const newName = e.target.value;
         setProjectName(newName);
-        setProjectId(newName.trim() ? generateProjectId(newName) : '');
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            await createProject({ 
-                projectname: projectName, 
-                projectid: projectId, 
+            const response = await createProject({
+                projectname: projectName,
+                projectid: projectId, // Send projectid to the backend
                 teamlead: user.email,
-                group_id: group_id // Include group_id from URL path
+                group_id: group_id, // Include group_id from URL path
             });
+
+            // Update project list after creating a project
+            if (response && response.data) {
+                setProjects((prevProjects) => [...prevProjects, response.data]);
+            }
+
             setProjectName('');
-            setProjectId('');
-            setShowForm(false);
+            setProjectId(''); // Reset project ID after submission
+            setShowForm(false); // Hide form after submission
         } catch (error) {
             console.error('Error creating project:', error);
-            let errorMessage = "rror creating project:";
+            let errorMessage = 'Error creating project:';
 
-      if (error.response) {
-          errorMessage = error.response.data.error || "Something went wrong.";
-      } else if (error.request) {
-          errorMessage = "No response from server. Check your internet connection.";
-      }
+            if (error.response) {
+                errorMessage = error.response.data.error || 'Something went wrong.';
+            } else if (error.request) {
+                errorMessage = 'No response from server. Check your internet connection.';
+            }
 
-      alert(errorMessage);
+            alert(errorMessage);
         }
     };
 
     useEffect(() => {
         if (project && project.projectid) {
-            navigate(`/group/${group_id}/project/${project.projectid}/backlog`);
+            navigate(`/group/${group_id}/project/`);
         }
     }, [project, navigate, group_id]);
 
     return (
-        <span className='create-project'>
+        <span className="create-project">
             {!showForm && (
-                <button className="create-project-button" onClick={() => setShowForm(true)}>Create Project</button>
+                <button className="create-project-button" onClick={handleFormOpen}>Create Project</button>
             )}
             {showForm && (
                 <div className="modal">
@@ -64,7 +84,9 @@ const Project = ({ isAuthenticated, user, createProject, project }) => {
                         <span className="close" onClick={() => setShowForm(false)}>&times;</span>
                         <form onSubmit={handleSubmit} className="project-form">
                             <h3 className="projectName">Create a Scrum project</h3>
-                            <div className='project-form-inputs'>
+                            <div className="project-form-inputs">
+                                {/* Project ID displayed as read-only */}
+                                
                                 <label>Enter Project name</label>
                                 <input
                                     type="text"
@@ -73,13 +95,21 @@ const Project = ({ isAuthenticated, user, createProject, project }) => {
                                     onChange={handleProjectNameChange}
                                     required
                                 />
-                                <label>Project key</label>
+                                <label>Project ID</label>
                                 <input
                                     type="text"
                                     id="projectId"
-                                    value={projectId}
+                                    value={projectId} // Display the project ID here
                                     readOnly
                                     disabled
+                                />
+                                <label>Team Lead</label>
+                                <input
+                                    type="text"
+                                    id="teamLead"
+                                    value={user.email} // Set team lead to user's email
+                                    readOnly // Make the field read-only
+                                    disabled // Disable the field so it can't be edited
                                 />
                                 <button type="submit">Create Project</button>
                             </div>
@@ -91,10 +121,10 @@ const Project = ({ isAuthenticated, user, createProject, project }) => {
     );
 };
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
     isAuthenticated: state.auth.isAuthenticated,
     user: state.auth.user,
-    project: state.auth.project
+    project: state.auth.project,
 });
 
 export default connect(mapStateToProps, { createProject })(Project);

@@ -1,0 +1,13 @@
+.add-team-icon {
+      /* Add grey border */
+    border-radius: 50%;       /* Make it circular */
+    padding: 6px;             /* Add some space around the icon */
+    display: inline-block;    /* Ensure it behaves like an inline block */
+    font-size: 20px;          /* Adjust icon size if needed */
+    cursor: pointer;   
+    background-color: rgb(227, 226, 226);      /* Change cursor on hover */
+}
+
+.add-team-icon:hover {
+    background-color: lightgrey; /* Optional: change background on hover */
+}

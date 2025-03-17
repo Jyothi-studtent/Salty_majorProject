@@ -21,3 +21,7 @@ class UploadedFileSerializer(serializers.ModelSerializer):
     class Meta:
         model = UploadedFile
         fields = '__all__'
+class ProjectSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Project
+        fields = ['projectid', 'projectname', 'teamlead_email', 'group']

@@ -1,0 +1,117 @@
+/* Overlay Background */
+.modal {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+/* Modal Content Box - Increased Height */
+.modal-content {
+    background-color: #ffffff;
+    padding: 30px;
+    border-radius: 10px;
+    width: 35%;
+    min-width: 400px;
+    min-height: 450px; /* 🔹 Increased height */
+    box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2);
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+/* Close Button */
+.close {
+    color: #555;
+    float: right;
+    font-size: 26px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.close:hover {
+    color: #a8406a;
+}
+
+/* Form Container */
+.group-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px; /* 🔹 More spacing */
+    height: 100%; /* Ensure full modal height is used */
+}
+
+.group-form label {
+    font-size: 17px;
+    font-weight: 500;
+    margin-bottom: 5px;
+}
+
+.group-form input {
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 16px;
+    transition: border-color 0.3s ease;
+}
+
+.group-form input:focus {
+    border-color: #a8406a;
+    outline: none;
+}
+
+/* Submit Button */
+.group-form button {
+    padding: 12px;
+    background-color: #a8406a;
+    color: #ffffff;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 17px;
+    transition: background-color 0.3s ease;
+    margin-top: 15px; /* 🔹 Adds more spacing */
+}
+
+.group-form button:hover {
+    background-color: #aa6782;
+}
+
+/* Create Group Button */
+.create-group {
+    height: 120px; /* 🔹 Increased height */
+}
+
+.create-group-button {
+    padding: 14px 28px;
+    background-color: #a8406a;
+    color: #ffffff;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 17px;
+    transition: background-color 0.3s ease;
+    position: relative;
+    left: calc(100% - 270px);
+    top: 35px;
+}
+
+.create-group-button:hover {
+    background-color: #aa6782;
+}
+
+/* Fade-In Animation */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}

@@ -81,16 +81,15 @@ class UserAccount(AbstractBaseUser, PermissionsMixin):
             self.first_letter = placeholder["initial"]
         super(UserAccount, self).save(*args, **kwargs)
 
-from django.db import models
+
 
 class Group(models.Model):
-    group_id = models.CharField(primary_key=True, max_length=20)
+    group_id = models.CharField(primary_key=True, max_length=20, unique=True, null=False, blank=False)
     group_name = models.CharField(max_length=100, unique=True)
     group_head = models.EmailField(null=True)  
-    
 
     def __str__(self):
-        return self.group_name
+        return f"{self.group_name} - {self.group_id}"
 
 class GroupMember(models.Model):
     group = models.ForeignKey(Group, on_delete=models.CASCADE, related_name='members')

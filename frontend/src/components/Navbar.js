@@ -91,10 +91,6 @@ const Navbar = ({ logout, isAuthenticated, user }) => {
                 <ul className='nav-list'>
                     <li className='nav-item nav-logo-container'>
                         <button className='nav-button'>Salty</button>
-<<<<<<< HEAD
-                        {isAuthenticated && <GroupDropdown />} {/* ✅ Show GroupDropdown only when logged in */}
-                    </li>
-=======
                     </li>
                     <li className='nav-item'>
     <Link to={`/group`} className='nav-button'>
@@ -114,7 +110,6 @@ const Navbar = ({ logout, isAuthenticated, user }) => {
                             </ul>
                         )} */}
                     {/* </li> */}
->>>>>>> 34d3f2957b2348ebd2e27d7f11c290c439d61656
 
                     {isAuthenticated ? authLinks() : guestLinks()}
 

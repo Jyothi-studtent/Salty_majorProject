@@ -139,7 +139,7 @@ const Filters = ({ isAuthenticated, user, isSidebarCollapsed }) => {
             <option value="assigned_to_me">Assigned to me</option>
             <option value="Status">Status</option>
             <option value="unassigned">Unassigned</option>
-            <option value="complete_issues">completed Issues</option>
+            <option value="complete_issues">Issues of completed Sprints</option>
           </select>
 {/* 
           {selectedFilter === 'my_issues' && projects.length > 0 && (
@@ -185,7 +185,7 @@ const Filters = ({ isAuthenticated, user, isSidebarCollapsed }) => {
               <div className='info-display-container'>
                 {selectedIssue ? (
                   <CScroll>
-                    <DisplayIssueFiltersWithoutPop data={selectedIssue} />
+                    <DisplayIssueFiltersWithoutPop data={selectedIssue} selectedFilter={selectedFilter} />
                     <Comment data={selectedIssue} />
                   </CScroll>
                 ) : (

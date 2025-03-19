@@ -159,6 +159,7 @@ export const signup = (first_name,last_name, email, password, re_password) => as
 
     try {
         console.log("veofre sending auth");
+        console.log("auth",body,config)
         const res = await axios.post(`${process.env.REACT_APP_API_URL}/auth/users/`, body, config);
         console.log(res,"after sending auth");
 
@@ -167,9 +168,12 @@ export const signup = (first_name,last_name, email, password, re_password) => as
             payload: res.data
         });
     } catch (err) {
+
+        console.error("Signup error: ", err.response?.data || err.message);
         dispatch({
             type: SIGNUP_FAIL
         })
+        return err.response?.data?.email ? 'User account with this email already exists.' : 'Signup failed. Please try again.';
     }
 };
 
@@ -302,22 +306,21 @@ export const login = (email, password) => async dispatch => {
         dispatch(load_user());
         return null; 
     } catch (err) {
-        const errorResponse = err.response.data;
-        console.log(errorResponse)
-        let errorMessage = 'Login failed. Please try again.';
+        console.log('Login Error:inside the auth.js', err.response.data);
 
-        if (errorResponse.detail === 'Invalid password.') {
-            errorMessage = 'Invalid password.';
-        } else if (errorResponse.detail === 'User account not found.') {
-            errorMessage = 'User not found. Register to login';
-        } else if (errorResponse.detail === 'No active account found with the given credentials') {
-            errorMessage = 'Invalid Credentials';
-        }
+        // Default error message for "No active account found with the given credentials"
+        let errorMessage = 'Invalid credentials. Please check your email or password. If you are not registered, please sign up.';
+console.log("object",err.response.data)
+        // Additional error handling, if needed in the future
+        // const errorResponse = err.response.data;
+        // if (errorResponse.detail === 'Invalid password.') {
+        //     errorMessage = 'Incorrect password. Please try again.';
+        // }
 
         dispatch({
             type: LOGIN_FAIL
         });
-
+console.log("error message",errorMessage)
         return errorMessage;
     }
 };

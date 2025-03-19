@@ -21,19 +21,34 @@ const Login = ({ login, isAuthenticated }) => {
  const [showPassword, setShowPassword] = useState(false);
     const onChange = e => setFormData({ ...formData, [e.target.name]: e.target.value });
     const togglePasswordVisibility = () => {
-        console.log("visiiii",showPassword)
+      
         setShowPassword(prevState => !prevState)
-        console.log("visiiii",showPassword)
+       
     };
     const onSubmit = async e => {
+        
         e.preventDefault();
+        const lowerCaseEmail = email.toLowerCase();
         setMessage({ type: 'info', text: 'Please wait, it may take a few seconds...' });
         const error = await login(email, password);
+     
+        if (error) {
+            console.log("login error message",error)
+             setMessage({ type: 'error', text: error });
+     
+          
+             setTimeout(() => {
+                 setMessage({ type: null, text: '' });
+             }, 5000);
+             return;
+         }
     
         if (projectId != null) {
             try {
                 await axios.post('http://localhost:8000/djapp/process_invitation_token/', { email: email, projectid: projectId });
+               
             } catch (err) {
+                
                 if (err.response && err.response.status === 404) {
                     setMessage({ type: 'error', text: 'Invitation token processing endpoint not found.' });
                 } else {
@@ -42,15 +57,11 @@ const Login = ({ login, isAuthenticated }) => {
                 setTimeout(() => {
                     setMessage({ type: null, text: '' });
                 }, 3000);
+                
             }
         }
     
-        if (error) {
-            setMessage({ type: 'error', text: error });
-            setTimeout(() => {
-                setMessage({ type: null, text: '' });
-            }, 3000); // Clear message after 3 seconds
-        }
+        
     };
     
     const continueWithGoogle = async () => {

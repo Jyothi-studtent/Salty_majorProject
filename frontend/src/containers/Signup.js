@@ -28,27 +28,47 @@ const Signup = ({ signup, isAuthenticated }) => {
     const [showPassword, setShowPassword] = useState(false);
     const [showRePassword, setShowRePassword] = useState(false);
     const togglePasswordVisibility = () => {
-        console.log("visiiii",showPassword)
+      
         setShowPassword(prevState => !prevState)
-        console.log("visiiii",showPassword)
+       
     };
     
     const toggleRePasswordVisibility = () => {
-        console.log("visiiii",showRePassword)
+       
         setShowRePassword(prevState => !prevState);
-        console.log("visiiii",showRePassword)
+     
     };
         
     const onSubmit = async e => {
         e.preventDefault();
+        
+        const passwordCriteria = /^(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{6,}$/; // Regular expression for password validation
         setMessage({ type: 'info', text: 'Please wait, it may take a few seconds...' });
+        if (password.toLowerCase().includes(first_name.toLowerCase()) || 
+        password.toLowerCase().includes(last_name.toLowerCase()) || 
+        password.toLowerCase().includes(email.split('@')[0].toLowerCase())) {
+        setMessage({ type: 'error', text: 'Password should not be similar to your first name, last name, or email.' });
+        setTimeout(() => {
+            setMessage({ type: null, text: '' });
+        }, 3000);
+        return; 
+    }
+        if (!passwordCriteria.test(password)) {
+            // If the password doesn't meet the criteria, set an error message and do not send data to server
+            setMessage({ type: 'error', text: 'Password should contain at least one capital letter, one number, and one special character.' });
+            setTimeout(() => {
+                setMessage({ type: null, text: '' });
+            }, 3000);
+            return;
+        }
+    
         if (password === re_password) {
             const error = await signup(first_name, last_name, email, password, re_password);
             if (error) {
                 setMessage({ type: 'error', text: error });
                 setTimeout(() => {
                     setMessage({ type: null, text: '' });
-                }, 3000); // Clear message after 3 seconds
+                }, 3000);
             } else {
                 setAccountCreated(true);
             }
@@ -59,6 +79,7 @@ const Signup = ({ signup, isAuthenticated }) => {
             }, 3000); // Clear message after 3 seconds
         }
     };
+    
 
     const continueWithGoogle = async () => {
         try {
@@ -175,8 +196,7 @@ const Signup = ({ signup, isAuthenticated }) => {
                 </p>
                 {/* ⚠️ Password warning message */}
         <div style={{ color: "red", fontSize: "14px", marginTop: "10px", textAlign: "center" }}>
-            ⚠️   Password should contain at least one capital letter, one number, and one special character and should be more then 6 characters
-
+           
         </div>
             </div>
            

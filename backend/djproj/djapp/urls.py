@@ -5,7 +5,7 @@ urlpatterns = [
     path('create_group/', create_group, name='create_group'),
    path('create/', create_project, name='create_project'),
     path('add/', add_issue, name='add_issue'),
-
+path('check-email/', check_email_exists, name='check_email_exists'),
 
     path('project_list/',project_list, name='project_list'),
     path('group_list/',group_list, name='group_list'),

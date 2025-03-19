@@ -1417,6 +1417,25 @@ def create_compulsory_issue(request):
     else:
         return JsonResponse({'error': 'Only POST method allowed'}, status=405)
 
+from django.http import JsonResponse
+from .models import UserAccount
+@csrf_exempt
+def check_email_exists(request):
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)  # Parse JSON body
+            email = data.get('email')
+
+            if email and UserAccount.objects.filter(email=email).exists():
+                return JsonResponse({'email_exists': True})
+            else:
+                return JsonResponse({'email_exists': False, 'message': 'Email is not registered'}, status=400)
+        except json.JSONDecodeError:
+            return JsonResponse({'message': 'Invalid JSON format'}, status=400)
+    else:
+        return JsonResponse({'message': 'Invalid request method'}, status=405)
+
+
 
 
 

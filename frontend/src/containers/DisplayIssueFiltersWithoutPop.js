@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import './css/DIF.css';
 import FileComp from './FileComp';
 
-const DisplayIssueFilters = ({ data, user }) => {
+const DisplayIssueFilters = ({ data,selectedFilter, user }) => {
   const [issue, setIssue] = useState(data);
   const [isEditing, setIsEditing] = useState(false);
   const [assigneeOptions, setAssigneeOptions] = useState([]);
@@ -183,11 +183,20 @@ const DisplayIssueFilters = ({ data, user }) => {
             <strong>Files:</strong>
             <FileComp issueId={issue.id} issue_id={issue.issue_id} isEditing={isEditing} />
           </p>
-          {isEditing ? (
-            <button className="display-issue-button" onClick={handleSave}>Save</button>
-          ) : (
-            <button className="display-issue-button" onClick={handleEdit}>Edit</button>
-          )}
+          {selectedFilter !== "complete_issues" && (
+  <>
+    {isEditing ? (
+      <button className="display-issue-button" onClick={handleSave}>
+        Save
+      </button>
+    ) : (
+      <button className="display-issue-button" onClick={handleEdit}>
+        Edit
+      </button>
+    )}
+  </>
+)}
+
         </div>
       ) : (
         <p>No issues found</p>

@@ -382,6 +382,7 @@ const token = useSelector((state) => state.auth.access);
 
   const handleInputKeyDown = async (event) => {
     if (event.key === 'Enter') {
+      console.log("object",issue)
       handleInputBlur();
       try {
         const response = await axios.post("http://localhost:8000/djapp/update_issue_name/", {
@@ -425,7 +426,12 @@ const token = useSelector((state) => state.auth.access);
           {getIssueIcon(issue.IssueType || 'Story')}
           <div className={issue.status === 'Done' ? 'issue-done' : 'value'}>
             {issue.IssueName}
-            <FaPencilAlt onClick={  (e) => { e.preventDefault(); e.stopPropagation(); handleEditClick(); } }className="edit-icon" />
+            {!issue.IsCompulsory && (
+                <FaPencilAlt 
+                  onClick={(e) => { e.preventDefault(); e.stopPropagation(); handleEditClick(); }} 
+                  className="edit-icon" 
+                />
+              )}
           </div>
         </div>
       )}
@@ -453,10 +459,11 @@ const token = useSelector((state) => state.auth.access);
           <AssigneeSelector issue={issue} projectid={projectid} onAssigneeChange={(newAssignee) => handleAssigneeChange(newAssignee)} />
            </div>
        
-        <div id="deleteIssue" className="Dropdown" onClick={handleDeleteIssue}>
-        <FaRegTrashAlt size={16} />
-
-        </div>
+           {!issue.IsCompulsory && (
+          <div id="deleteIssue" className="Dropdown" onClick={handleDeleteIssue}>
+            <FaRegTrashAlt size={16} />
+          </div>
+        )}
       </div>
       {showPopup && (
         <Modal onClose={togglePopup}>

@@ -33,6 +33,8 @@ def ReactViews(request):
             pid1 = Project.objects.get(projectid=project_id)
             issues = issue.objects.filter(projectId=pid1,sprint__isnull=True)
             serializer = IssueSerializer(issues, many=True)
+            print("issues passed to frontendd",serializer.data)
+
             return JsonResponse(serializer.data,safe=False)
         except Project.DoesNotExist:
             return JsonResponse({"error": "Project not found"}, status=status.HTTP_404_NOT_FOUND)

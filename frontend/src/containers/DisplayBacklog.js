@@ -85,6 +85,7 @@ export default function DisplayBacklog() {
             );
            
             setissues(response.data)
+            console.log("setissues",response.data)
             setIssueChanged(false)
             
           

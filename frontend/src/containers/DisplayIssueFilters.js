@@ -4,7 +4,8 @@ import { connect } from 'react-redux';
 import './css/DIF.css';
 import CustomDropdown from './CustomDropdown';
 import FileComp from './FileComp';
-import {useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
+
 const DisplayIssueFilters = ({ data, user }) => {
   const [issue, setIssue] = useState(data);
   const [isEditing, setIsEditing] = useState(false);
@@ -52,22 +53,18 @@ const DisplayIssueFilters = ({ data, user }) => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    console.log("Changing:", name, "to", value); // Debugging log
-  
-    setIssue(prevIssue => {
-      const updatedIssue = { ...prevIssue, [name]: value };
-      console.log("Updated Issue after change:", updatedIssue); // Debugging log
-      return updatedIssue;
-    });
+
+    setIssue(prevIssue => ({
+      ...prevIssue,
+      [name]: value,
+    }));
   };
-  
 
   const handleEdit = () => {
     setIsEditing(true);
   };
 
   const handleSave = async () => {
-    console.log("Saving issue with data:", issue);
     try {
       const response = await axios.post(`http://localhost:8000/djapp/update_issue/`, issue);
       console.log("Response from API:", response.data);
@@ -77,6 +74,8 @@ const DisplayIssueFilters = ({ data, user }) => {
     }
   };
 
+  const isCompulsory = data.IsCompulsory;
+
   return (
     <div className='display-issue-main-container'>
       {issue ? (
@@ -85,7 +84,7 @@ const DisplayIssueFilters = ({ data, user }) => {
           
           <p>
             <strong>Type:</strong>
-            {isEditing ? (
+            {isEditing && !isCompulsory ? (
               <select className="display-issue-select" name="IssueType" value={issue.IssueType || ''} onChange={handleChange}>
                 <option value="">Select...</option>
                 <option value="Story">Story</option>
@@ -100,7 +99,7 @@ const DisplayIssueFilters = ({ data, user }) => {
 
           <p>
             <strong>Description:</strong>
-            {isEditing ? (
+            {isEditing && !isCompulsory ? (
               <textarea className="display-issue-textarea" name="description" value={issue.description || ''} onChange={handleChange} />
             ) : (
               issue.description || '----'
@@ -152,7 +151,7 @@ const DisplayIssueFilters = ({ data, user }) => {
 
           <p>
             <strong>Story Points:</strong>
-            {isEditing ? (
+            {isEditing && !isCompulsory ? (
               <select className="display-issue-select" name="StoryPoint" value={issue.StoryPoint || ''} onChange={handleChange}>
                 <option value="">Select...</option>
                 <option value="1">1</option>
@@ -169,9 +168,8 @@ const DisplayIssueFilters = ({ data, user }) => {
 
           <p>
             <strong>Priority:</strong>
-            {isEditing ? (
-              <select className="display-issue-select" name="Priority" value={issue.Priority !== "" ? issue.Priority : '----'}
-              onChange={handleChange}>
+            {isEditing && !isCompulsory ? (
+              <select className="display-issue-select" name="Priority" value={issue.Priority || ''} onChange={handleChange}>
                 <option value="">Select...</option>
                 <option value="Highest">Highest</option>
                 <option value="High">High</option>

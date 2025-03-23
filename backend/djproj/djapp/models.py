@@ -140,7 +140,7 @@ class Sprint(models.Model):
 from django.utils import timezone
 class issue(models.Model):
     IssueName = models.CharField(max_length=30,default="",unique=False)
-    issue_id = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
+    issue_id = models.UUIDField(default=uuid.uuid4, editable=False,unique=True)
     sprint = models.ForeignKey(Sprint, on_delete=models.SET_NULL, null=True, blank=True,default="null")
     projectId = models.ForeignKey(Project, on_delete=models.SET_NULL, null=True, blank=True)
     IssueType=models.CharField(max_length=30,default="")
@@ -160,8 +160,8 @@ class issue(models.Model):
 
 from django.utils import timezone
 class Comments(models.Model):
-    CommentId = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
-    IssueId = models.ForeignKey(issue, on_delete=models.CASCADE, null=True, blank=True, default="null")
+    CommentId = models.UUIDField(default=uuid.uuid4, editable=False,unique=True )
+    IssueId = models.ForeignKey(issue, to_field='issue_id', on_delete=models.CASCADE)
     ProjectId = models.ForeignKey(Project, on_delete=models.SET_NULL, null=True, blank=True, default="null")
     WrittenBy = models.CharField(max_length=50, default='')
     CreatedAt = models.DateTimeField(default=timezone.now)

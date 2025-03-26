@@ -466,14 +466,12 @@ const token = useSelector((state) => state.auth.access);
         )}
       </div>
       {showPopup && (
-        <Modal onClose={togglePopup}>
-        <DisplayIssueFilters data={issue} user={user}/>
-      </Modal>
-            
-
-         
-        
-      )}
+              <div className="popup-overlay" onClick={togglePopup}>
+                <div className="popup-content" onClick={(e) => e.stopPropagation()}>
+                  <DisplayIssueFilters data={issue} user={user}/>
+                </div>
+              </div>
+            )}
     </div>
 </div>
   );

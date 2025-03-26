@@ -17,9 +17,11 @@ function Comment({ user, data }) {
 
   const createComment = async () => {
     try {
+      console.log(data);
       const response = await axios.post('http://localhost:8000/djapp/create_comment/', {
+  
         issue_id: data.issue_id,
-        project_id: data.project_id,
+        id: data.id,
         written_by: user.email,
         comment_body: commentBody
       });

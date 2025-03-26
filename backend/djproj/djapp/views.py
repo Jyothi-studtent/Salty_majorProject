@@ -497,13 +497,11 @@ def create_comment(request):
     if request.method == 'POST':
         data = json.loads(request.body)
         issue_id = data.get('issue_id')
-        project_id = data.get('project_id')
         written_by = data.get('written_by')
         comment_body = data.get('comment_body')
         issue_obj = get_object_or_404(issue, issue_id=issue_id)
         comment = Comments(
             IssueId=issue_obj,
-            ProjectId=issue_obj.projectId,
             WrittenBy=written_by,
             CommentBody=comment_body,
             CreatedAt=timezone.now(),
@@ -515,13 +513,11 @@ def create_comment(request):
 
 def fetch_comments(request, issue_id):
     if request.method == 'GET':
-        print(request, issue_id)
         comments = Comments.objects.filter(IssueId=issue_id).order_by('-CreatedAt')
         comments_list = [
             {
                 'comment_id': comment.CommentId,
                 'issue_id': comment.IssueId.issue_id,
-                'project_id': comment.ProjectId.projectid if comment.ProjectId else None,
                 'written_by': comment.WrittenBy,
                 'comment_body': comment.CommentBody,
                 'created_at': comment.CreatedAt.strftime('%Y-%m-%d %H:%M:%S'),
@@ -1386,6 +1382,7 @@ def create_compulsory_issue(request):
                     # Create the issue for the project
                     new_issue = issue.objects.create(
                         IssueName=issue_name,
+                        IssueType = "Story",
                         description=description,
                         StoryPoint=story_points,
                         Priority=priority,

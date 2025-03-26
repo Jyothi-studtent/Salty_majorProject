@@ -151,7 +151,6 @@ class issue(models.Model):
     assignee=models.CharField(max_length=30,default="",null=True)
     assigned_by=models.CharField(max_length=30,default="")
     description=models.TextField(max_length=30,default="")
-    file_field = models.FileField(upload_to='uploads/', default='default_file.txt')
     StoryPoint = models.IntegerField(default=1)
     Priority = models.CharField(max_length=30,default="")
     IsCompulsory = models.BooleanField(default=False)
@@ -161,18 +160,20 @@ class issue(models.Model):
     def __str__(self):
         return f"{self.IssueName} ({self.projectId})"
 
-from django.utils import timezone
 class Comments(models.Model):
-    CommentId = models.UUIDField(default=uuid.uuid4, editable=False,unique=True )
-    IssueId = models.ForeignKey(issue, to_field='issue_id', on_delete=models.CASCADE)
-    ProjectId = models.ForeignKey(Project, on_delete=models.SET_NULL, null=True, blank=True, default="null")
+    CommentId = models.AutoField(primary_key=True)  
+    IssueId = models.ForeignKey(issue, on_delete=models.CASCADE, default=None)
     WrittenBy = models.CharField(max_length=50, default='')
     CreatedAt = models.DateTimeField(default=timezone.now)
     EditedAt = models.DateTimeField(default=timezone.now)
     CommentBody = models.TextField(max_length=300, default='')
 
+    def __str__(self):
+        return f"Comment {self.CommentId} by {self.WrittenBy}"
+
+
 class UploadedFile(models.Model):
-    id = id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    id =  models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     file = models.FileField(upload_to='uploads/')  
     uploaded_at = models.DateTimeField(auto_now_add=True)  
     issue = models.ForeignKey(issue, on_delete=models.CASCADE,default="")  # Assuming Issue is your related model

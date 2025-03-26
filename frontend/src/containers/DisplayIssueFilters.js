@@ -78,6 +78,7 @@ const DisplayIssueFilters = ({ data, user }) => {
 
   return (
     <div className='display-issue-main-container'>
+      
       {issue ? (
         <div className="display-issue-card">
           <h1 className="display-issue-title">{issue.IssueName || issue.EpicName || '----'}</h1>
@@ -196,6 +197,7 @@ const DisplayIssueFilters = ({ data, user }) => {
       ) : (
         <p>No issues found</p>
       )}
+      
     </div>
   );
 };

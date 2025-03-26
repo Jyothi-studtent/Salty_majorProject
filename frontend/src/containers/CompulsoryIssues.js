@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import axios from 'axios';
 import './css/compIssues.css';
+import FileComp from './FileComp';
 
 export default function CompulsoryIssues() {
   const { group_id } = useParams();
@@ -23,40 +24,47 @@ export default function CompulsoryIssues() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+  
     if (!formData.issue_name || !formData.description) {
       alert('Issue Name and Description are required.');
       return;
     }
-
+  
     try {
       const response = await axios.get('http://localhost:8000/djapp/project_list/', {
         params: { email: user.email, group_id: group_id },
       });
-
+  
       let projects = [];
       if (response.status === 200) {
         projects = response.data;
         console.log('Projects fetched:', projects);
       }
-
+  
       const projectIds = projects.map((project) => project.projectid);
-
+  
       const payload = {
         issue_name: formData.issue_name,
         description: formData.description,
         story_points: formData.story_points,
         priority: formData.priority,
         deadline: formData.deadline,
-        projects: projectIds, // Send list of project IDs
-        assigned_by: user.email, // Use the logged-in user's email
+        projects: projectIds,
+        assigned_by: user.email,
       };
-
+  
       console.log('Submitting payload:', payload);
       const postResponse = await axios.post('http://localhost:8000/djapp/create_compulsory_issue/', payload);
-
+  
       if (postResponse.status === 201) {
         alert('Compulsory issue created for all projects in the group.');
+        setFormData({  // Reset form fields
+          issue_name: '',
+          story_points: 1,
+          description: '',
+          priority: 'Medium',
+          deadline: '',
+        });
         setShowForm(false); // Close the form after successful submission
       }
     } catch (error) {
@@ -64,6 +72,12 @@ export default function CompulsoryIssues() {
       alert('Failed to create compulsory issue.');
     }
   };
+  
+
+  const today = new Date();
+const tomorrow = new Date(today);
+tomorrow.setDate(today.getDate() + 1);
+const minDate = tomorrow.toISOString().split('T')[0];
 
   return (
     <div>
@@ -107,6 +121,7 @@ export default function CompulsoryIssues() {
               <input
                 type="date"
                 value={formData.deadline}
+                min={minDate} // Ensures the deadline can't be today or earlier
                 onChange={(e) => setFormData({ ...formData, deadline: e.target.value })}
               />
               <select
@@ -122,6 +137,7 @@ export default function CompulsoryIssues() {
               <button type="submit">Create</button>
               <button type="button" onClick={toggleForm}>Cancel</button>
             </form>
+            {/* <FileComp /> */}
           </div>
         </div>
       )}

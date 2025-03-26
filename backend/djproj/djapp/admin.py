@@ -16,7 +16,7 @@ class IssueAdmin(admin.ModelAdmin):
 admin.site.register(UserAccount)
 admin.site.register(Group)
 admin.site.register(GroupMember)
-
+admin.site.register(Comments)
 admin.site.register(Project)
 admin.site.register(Project_TeamMember)
 admin.site.register(issue)
